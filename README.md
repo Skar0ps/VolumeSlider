@@ -1,8 +1,4 @@
-<div style="display:flex"><img height=48 src="addons/volume_slider/icons/HVolumeSlider.svg">
-<h1>VolumeSlider</h1></div>
+<h1><img height=64 src="addons/volume_slider/icons/VVolumeSlider.svg"> VolumeSlider<img height=64 src="addons/volume_slider/icons/HVolumeSlider.svg"></h1>
 
--------------------------------------
-
- Simple volume slider for Godot 4
-
-
+*Simple volume sliders for Godot 4 (Vertical & Horizontal)*
+ 
