@@ -1,0 +1,358 @@
+[gd_scene load_steps=8 format=3 uid="uid://dq5huo5viae5t"]
+
+[ext_resource type="Script" path="res://addons/volume_slider/scripts/h_volume_slider.gd" id="1_6rln0"]
+[ext_resource type="Script" path="res://addons/volume_slider/scripts/v_volume_slider.gd" id="1_r6x3m"]
+[ext_resource type="AudioStream" uid="uid://dobkf3d3apg33" path="res://addons/volume_slider/examples/hangtime.ogg" id="2_1a1sw"]
+[ext_resource type="AudioStream" uid="uid://cdcaq82hwtip5" path="res://addons/volume_slider/examples/humam_mumble.ogg" id="3_44ugk"]
+[ext_resource type="AudioStream" uid="uid://btbfgo2j44y0" path="res://addons/volume_slider/examples/ambience_day.ogg" id="4_lwqib"]
+
+[sub_resource type="GDScript" id="GDScript_43jmk"]
+script/source = "extends MarginContainer
+
+
+func _ready():
+	AudioServer.set_bus_layout(load(\"res://addons/volume_slider/examples/audio_test_layout.tres\"))
+"
+
+[sub_resource type="GDScript" id="GDScript_3ggvx"]
+script/source = "extends Label
+
+
+func set_text(value):
+	text = str(value)
+"
+
+[node name="Margin" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
+script = SubResource("GDScript_43jmk")
+
+[node name="HBox" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="HBox" type="HBoxContainer" parent="HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Master" type="VBoxContainer" parent="HBox/HBox"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Master" type="VBoxContainer" parent="HBox/HBox/Master"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+
+[node name="VolumeLabel" type="Label" parent="HBox/HBox/Master/Master"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_stretch_ratio = 0.0
+theme_override_font_sizes/font_size = 24
+text = "100"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = SubResource("GDScript_3ggvx")
+
+[node name="VVolumeSlider" type="VSlider" parent="HBox/HBox/Master/Master"]
+layout_mode = 2
+size_flags_horizontal = 1
+size_flags_vertical = 3
+value = 100.0
+script = ExtResource("1_r6x3m")
+
+[node name="Master" type="Label" parent="HBox/HBox/Master/Master"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+size_flags_stretch_ratio = 0.0
+theme_override_font_sizes/font_size = 32
+text = "Master"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="VBox" type="VBoxContainer" parent="HBox/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBox" type="HBoxContainer" parent="HBox/HBox/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+
+[node name="SFX" type="VBoxContainer" parent="HBox/HBox/VBox/HBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+
+[node name="VolumeLabel" type="Label" parent="HBox/HBox/VBox/HBox/SFX"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_stretch_ratio = 0.0
+theme_override_font_sizes/font_size = 24
+text = "100"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = SubResource("GDScript_3ggvx")
+
+[node name="VVolumeSlider" type="VSlider" parent="HBox/HBox/VBox/HBox/SFX"]
+layout_mode = 2
+size_flags_horizontal = 1
+size_flags_vertical = 3
+value = 100.0
+script = ExtResource("1_r6x3m")
+bus_name = "SFX"
+
+[node name="SFX" type="Label" parent="HBox/HBox/VBox/HBox/SFX"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+size_flags_stretch_ratio = 0.0
+theme_override_font_sizes/font_size = 32
+text = "SFX"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="VBox" type="VBoxContainer" parent="HBox/HBox/VBox/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBox" type="HBoxContainer" parent="HBox/HBox/VBox/HBox/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Music" type="VBoxContainer" parent="HBox/HBox/VBox/HBox/VBox/HBox"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+
+[node name="VolumeLabel" type="Label" parent="HBox/HBox/VBox/HBox/VBox/HBox/Music"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_stretch_ratio = 0.0
+theme_override_font_sizes/font_size = 24
+text = "100"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = SubResource("GDScript_3ggvx")
+
+[node name="VVolumeSlider" type="VSlider" parent="HBox/HBox/VBox/HBox/VBox/HBox/Music"]
+layout_mode = 2
+size_flags_horizontal = 1
+size_flags_vertical = 3
+value = 100.0
+script = ExtResource("1_r6x3m")
+bus_name = "Music"
+
+[node name="Music" type="Label" parent="HBox/HBox/VBox/HBox/VBox/HBox/Music"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+size_flags_stretch_ratio = 0.0
+theme_override_font_sizes/font_size = 32
+text = "Music"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="VBox" type="VBoxContainer" parent="HBox/HBox/VBox/HBox/VBox/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBox" type="HBoxContainer" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Ambience" type="VBoxContainer" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+
+[node name="VolumeLabel" type="Label" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/Ambience"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_stretch_ratio = 0.0
+theme_override_font_sizes/font_size = 24
+text = "100"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = SubResource("GDScript_3ggvx")
+
+[node name="VVolumeSlider" type="VSlider" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/Ambience"]
+layout_mode = 2
+size_flags_horizontal = 1
+size_flags_vertical = 3
+value = 100.0
+script = ExtResource("1_r6x3m")
+bus_name = "Ambience"
+
+[node name="Ambience" type="Label" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/Ambience"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+size_flags_stretch_ratio = 0.0
+theme_override_font_sizes/font_size = 32
+text = "Ambience"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="VBox" type="VBoxContainer" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 64
+text = "Volume 
+sliders
+example"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AmbienceSlider" type="HBoxContainer" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/VBox"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 8
+theme_override_constants/separation = 0
+
+[node name="VolumeSlider" type="HSlider" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/VBox/AmbienceSlider"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+value = 100.0
+script = ExtResource("1_6rln0")
+bus_name = "Ambience"
+
+[node name="VolumeLabel" type="Label" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/VBox/AmbienceSlider"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 1
+size_flags_stretch_ratio = 0.0
+theme_override_font_sizes/font_size = 24
+text = "100"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = SubResource("GDScript_3ggvx")
+
+[node name="Music" type="HBoxContainer" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+theme_override_constants/separation = 0
+
+[node name="VolumeSlider" type="HSlider" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/Music"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+value = 100.0
+script = ExtResource("1_6rln0")
+bus_name = "Music"
+
+[node name="VolumeLabel" type="Label" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/Music"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 1
+size_flags_stretch_ratio = 0.0
+theme_override_font_sizes/font_size = 24
+text = "100"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = SubResource("GDScript_3ggvx")
+
+[node name="HSFX" type="HBoxContainer" parent="HBox/HBox/VBox/HBox/VBox"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+theme_override_constants/separation = 0
+
+[node name="VolumeSlider" type="HSlider" parent="HBox/HBox/VBox/HBox/VBox/HSFX"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+value = 100.0
+script = ExtResource("1_6rln0")
+bus_name = "SFX"
+
+[node name="VolumeLabel" type="Label" parent="HBox/HBox/VBox/HBox/VBox/HSFX"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 1
+size_flags_stretch_ratio = 0.0
+theme_override_font_sizes/font_size = 24
+text = "100"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = SubResource("GDScript_3ggvx")
+
+[node name="Master" type="HBoxContainer" parent="HBox/HBox/VBox"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+theme_override_constants/separation = 0
+
+[node name="VolumeSlider" type="HSlider" parent="HBox/HBox/VBox/Master"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+value = 100.0
+script = ExtResource("1_6rln0")
+
+[node name="VolumeLabel" type="Label" parent="HBox/HBox/VBox/Master"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 1
+size_flags_stretch_ratio = 0.0
+theme_override_font_sizes/font_size = 24
+text = "100"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = SubResource("GDScript_3ggvx")
+
+[node name="Music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_1a1sw")
+autoplay = true
+
+[node name="SFX" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_44ugk")
+autoplay = true
+
+[node name="Ambience" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_lwqib")
+autoplay = true
+
+[connection signal="value_changed" from="HBox/HBox/Master/Master/VVolumeSlider" to="HBox/HBox/Master/Master/VolumeLabel" method="set_text"]
+[connection signal="value_changed" from="HBox/HBox/Master/Master/VVolumeSlider" to="HBox/HBox/VBox/Master/VolumeSlider" method="set_value"]
+[connection signal="value_changed" from="HBox/HBox/VBox/HBox/SFX/VVolumeSlider" to="HBox/HBox/VBox/HBox/SFX/VolumeLabel" method="set_text"]
+[connection signal="value_changed" from="HBox/HBox/VBox/HBox/SFX/VVolumeSlider" to="HBox/HBox/VBox/HBox/VBox/HSFX/VolumeSlider" method="set_value"]
+[connection signal="value_changed" from="HBox/HBox/VBox/HBox/VBox/HBox/Music/VVolumeSlider" to="HBox/HBox/VBox/HBox/VBox/HBox/Music/VolumeLabel" method="set_text"]
+[connection signal="value_changed" from="HBox/HBox/VBox/HBox/VBox/HBox/Music/VVolumeSlider" to="HBox/HBox/VBox/HBox/VBox/HBox/VBox/Music/VolumeSlider" method="set_value"]
+[connection signal="value_changed" from="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/Ambience/VVolumeSlider" to="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/Ambience/VolumeLabel" method="set_text"]
+[connection signal="value_changed" from="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/Ambience/VVolumeSlider" to="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/VBox/AmbienceSlider/VolumeSlider" method="set_value"]
+[connection signal="value_changed" from="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/VBox/AmbienceSlider/VolumeSlider" to="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/Ambience/VVolumeSlider" method="set_value"]
+[connection signal="value_changed" from="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/VBox/AmbienceSlider/VolumeSlider" to="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/VBox/AmbienceSlider/VolumeLabel" method="set_text"]
+[connection signal="value_changed" from="HBox/HBox/VBox/HBox/VBox/HBox/VBox/Music/VolumeSlider" to="HBox/HBox/VBox/HBox/VBox/HBox/Music/VVolumeSlider" method="set_value"]
+[connection signal="value_changed" from="HBox/HBox/VBox/HBox/VBox/HBox/VBox/Music/VolumeSlider" to="HBox/HBox/VBox/HBox/VBox/HBox/VBox/Music/VolumeLabel" method="set_text"]
+[connection signal="value_changed" from="HBox/HBox/VBox/HBox/VBox/HSFX/VolumeSlider" to="HBox/HBox/VBox/HBox/SFX/VVolumeSlider" method="set_value"]
+[connection signal="value_changed" from="HBox/HBox/VBox/HBox/VBox/HSFX/VolumeSlider" to="HBox/HBox/VBox/HBox/VBox/HSFX/VolumeLabel" method="set_text"]
+[connection signal="value_changed" from="HBox/HBox/VBox/Master/VolumeSlider" to="HBox/HBox/Master/Master/VVolumeSlider" method="set_value"]
+[connection signal="value_changed" from="HBox/HBox/VBox/Master/VolumeSlider" to="HBox/HBox/VBox/Master/VolumeLabel" method="set_text"]
