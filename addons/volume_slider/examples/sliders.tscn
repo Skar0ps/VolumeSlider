@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://dq5huo5viae5t"]
 
-[ext_resource type="Script" path="res://addons/volume_slider/scripts/h_volume_slider.gd" id="1_6rln0"]
-[ext_resource type="Script" path="res://addons/volume_slider/scripts/v_volume_slider.gd" id="1_r6x3m"]
+[ext_resource type="Script" uid="uid://dug14s2hemd1i" path="res://addons/volume_slider/scripts/h_volume_slider.gd" id="1_6rln0"]
+[ext_resource type="Script" uid="uid://dns35ic13fl62" path="res://addons/volume_slider/scripts/v_volume_slider.gd" id="1_r6x3m"]
 [ext_resource type="AudioStream" uid="uid://dobkf3d3apg33" path="res://addons/volume_slider/examples/hangtime.ogg" id="2_1a1sw"]
 [ext_resource type="AudioStream" uid="uid://cdcaq82hwtip5" path="res://addons/volume_slider/examples/humam_mumble.ogg" id="3_44ugk"]
 [ext_resource type="AudioStream" uid="uid://btbfgo2j44y0" path="res://addons/volume_slider/examples/ambience_day.ogg" id="4_lwqib"]
@@ -68,8 +68,10 @@ script = SubResource("GDScript_3ggvx")
 layout_mode = 2
 size_flags_horizontal = 1
 size_flags_vertical = 3
+step = 0.01
 value = 100.0
 script = ExtResource("1_r6x3m")
+bus_name = "Master"
 
 [node name="Master" type="Label" parent="HBox/HBox/Master/Master"]
 layout_mode = 2
@@ -111,7 +113,7 @@ size_flags_horizontal = 1
 size_flags_vertical = 3
 value = 100.0
 script = ExtResource("1_r6x3m")
-bus_name = "SFX"
+bus_name = "Master"
 
 [node name="SFX" type="Label" parent="HBox/HBox/VBox/HBox/SFX"]
 layout_mode = 2
@@ -315,6 +317,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 1
 value = 100.0
 script = ExtResource("1_6rln0")
+bus_name = "Master"
 
 [node name="VolumeLabel" type="Label" parent="HBox/HBox/VBox/Master"]
 custom_minimum_size = Vector2(32, 32)

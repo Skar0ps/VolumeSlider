@@ -11,9 +11,13 @@ config_version=5
 [application]
 
 config/name="VolumeSlider"
-config/features=PackedStringArray("4.0", "Forward Plus")
-config/icon="res://icon.svg"
+config/tags=PackedStringArray("plugin")
+config/features=PackedStringArray("4.4", "Forward Plus")
 
 [audio]
 
-buses/default_bus_layout="res://addons/volume_slider/examples/audio_test_layout.tres"
+buses/default_bus_layout="uid://dnr4n5gi8nmwr"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/volume_slider/plugin.cfg")
