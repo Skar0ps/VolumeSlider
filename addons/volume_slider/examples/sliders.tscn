@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://dq5huo5viae5t"]
+[gd_scene format=3 uid="uid://dq5huo5viae5t"]
 
 [ext_resource type="Script" uid="uid://dug14s2hemd1i" path="res://addons/volume_slider/scripts/h_volume_slider.gd" id="1_6rln0"]
+[ext_resource type="Theme" uid="uid://cp4elnpdafa3s" path="res://addons/volume_slider/VolumeSliderTheme.tres" id="1_i17ug"]
 [ext_resource type="Script" uid="uid://dns35ic13fl62" path="res://addons/volume_slider/scripts/v_volume_slider.gd" id="1_r6x3m"]
 [ext_resource type="AudioStream" uid="uid://dobkf3d3apg33" path="res://addons/volume_slider/examples/hangtime.ogg" id="2_1a1sw"]
-[ext_resource type="AudioStream" uid="uid://cdcaq82hwtip5" path="res://addons/volume_slider/examples/humam_mumble.ogg" id="3_44ugk"]
 [ext_resource type="AudioStream" uid="uid://btbfgo2j44y0" path="res://addons/volume_slider/examples/ambience_day.ogg" id="4_lwqib"]
+[ext_resource type="AudioStream" uid="uid://bnk4reeu04nsm" path="res://addons/volume_slider/examples/humam_mumble.ogg" id="7_btifn"]
 
 [sub_resource type="GDScript" id="GDScript_43jmk"]
 script/source = "extends MarginContainer
@@ -14,15 +15,107 @@ func _ready():
 	AudioServer.set_bus_layout(load(\"res://addons/volume_slider/examples/audio_test_layout.tres\"))
 "
 
-[sub_resource type="GDScript" id="GDScript_3ggvx"]
-script/source = "extends Label
+[sub_resource type="DPITexture" id="DPITexture_o7ghw"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" xml:space=\"preserve\" width=\"16\" height=\"16\" version=\"1.0\" viewBox=\"0 0 2.4 2.4\"><path fill=\"#e0e0e0\" d=\"M 1.2518555 0.15 A 0.1 0.1 0 0 0 1.1701172 0.17988281 L 0.6 0.75 L 0.31787109 0.75 C 0.22487119 0.75 0.15 0.81700008 0.15 0.9 L 0.15 1.5 C 0.15 1.5424221 0.16969512 1.5805593 0.20126953 1.6078125 L 1.35 0.45527344 L 1.35 0.25605469 A 0.106 0.106 0 0 0 1.2518555 0.15 z M 1.35 1.6438477 L 0.97236328 2.0223633 L 1.1701172 2.2201172 C 1.2361171 2.2871171 1.35 2.239996 1.35 2.1459961 L 1.35 1.6438477 z\"/><path fill=\"#e0e0e0\" d=\"M 2.1984375 0.79306641 L 2.0660156 0.92578125 C 2.1142629 1.1320246 2.0935608 1.3239034 2.0487305 1.4882812 C 1.9692536 1.7796963 1.8105469 1.9725586 1.8105469 1.9725586 A 0.0825 0.0825 0 0 0 1.8222656 2.0879883 A 0.0825 0.0825 0 0 0 1.9394531 2.0780273 C 1.9394531 2.0780273 2.1176607 1.8586814 2.2069336 1.5313477 C 2.2638362 1.3227069 2.2834498 1.0648044 2.1984375 0.79306641 z M 1.8539062 1.1384766 L 1.6790039 1.3136719 C 1.6747238 1.3346601 1.6697313 1.3550615 1.6640625 1.3749023 C 1.6131343 1.5531513 1.5117188 1.6719727 1.5117187 1.6719727 A 0.0825 0.0825 0 0 0 1.5213867 1.7871094 A 0.0825 0.0825 0 0 0 1.6368164 1.7791992 C 1.6368164 1.7791992 1.7606941 1.6355198 1.8222656 1.4200195 C 1.8460259 1.3368593 1.8597024 1.2410136 1.8539062 1.1384766 z\" color=\"#000\" paint-order=\"markers stroke fill\" style=\"-inkscape-stroke:none\"/><path fill=\"#fc7f7f\" d=\"M.08295 2.0529 2.0502.07965 2.31705.34725.34965 2.32035ZM-1.2804596 3.0939027 3.0879072-1.2877874Z\"/></svg>
+"
+saturation = 2.0
+color_map = {
+Color(1, 0.37254903, 0.37254903, 1): Color(1, 0.47, 0.42, 1),
+Color(0.37254903, 1, 0.5921569, 1): Color(0.45, 0.95, 0.5, 1),
+Color(1, 0.8666667, 0.39607844, 1): Color(0.83, 0.78, 0.62, 1)
+}
 
+[sub_resource type="DPITexture" id="DPITexture_nkkuw"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" xml:space=\"preserve\" width=\"16\" height=\"16\" version=\"1.0\" viewBox=\"0 0 2.4 2.4\"><path fill=\"#e0e0e0\" d=\"M1.252.15a.1.1 0 0 0-.082.03L.6.75H.318C.225.75.15.817.15.9v.6c0 .083.075.15.168.15H.6l.57.57c.066.067.18.02.18-.074V.256A.106.106 0 0 0 1.252.15\" paint-order=\"markers stroke fill\"/><path fill=\"none\" stroke=\"#e0e0e0\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\".165\" d=\"M1.575.675c.45.525 0 1.05 0 1.05m.3-1.35c.675.825 0 1.65 0 1.65\" paint-order=\"markers stroke fill\"/></svg>
+"
+saturation = 2.0
+color_map = {
+Color(1, 0.37254903, 0.37254903, 1): Color(1, 0.47, 0.42, 1),
+Color(0.37254903, 1, 0.5921569, 1): Color(0.45, 0.95, 0.5, 1),
+Color(1, 0.8666667, 0.39607844, 1): Color(0.83, 0.78, 0.62, 1)
+}
 
-func set_text(value):
-	text = str(value)
+[sub_resource type="DPITexture" id="DPITexture_i17ug"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" xml:space=\"preserve\" width=\"16\" height=\"16\" version=\"1.0\" viewBox=\"0 0 2.4 2.4\"><path fill=\"#e0e0e0\" d=\"M 1.2518555 0.15 A 0.1 0.1 0 0 0 1.1701172 0.17988281 L 0.6 0.75 L 0.31787109 0.75 C 0.22487119 0.75 0.15 0.81700008 0.15 0.9 L 0.15 1.5 C 0.15 1.5424221 0.16969512 1.5805593 0.20126953 1.6078125 L 1.35 0.45527344 L 1.35 0.25605469 A 0.106 0.106 0 0 0 1.2518555 0.15 z M 1.35 1.6438477 L 0.97236328 2.0223633 L 1.1701172 2.2201172 C 1.2361171 2.2871171 1.35 2.239996 1.35 2.1459961 L 1.35 1.6438477 z\"/><path fill=\"#e0e0e0\" d=\"M 2.1984375 0.79306641 L 2.0660156 0.92578125 C 2.1142629 1.1320246 2.0935608 1.3239034 2.0487305 1.4882812 C 1.9692536 1.7796963 1.8105469 1.9725586 1.8105469 1.9725586 A 0.0825 0.0825 0 0 0 1.8222656 2.0879883 A 0.0825 0.0825 0 0 0 1.9394531 2.0780273 C 1.9394531 2.0780273 2.1176607 1.8586814 2.2069336 1.5313477 C 2.2638362 1.3227069 2.2834498 1.0648044 2.1984375 0.79306641 z M 1.8539062 1.1384766 L 1.6790039 1.3136719 C 1.6747238 1.3346601 1.6697313 1.3550615 1.6640625 1.3749023 C 1.6131343 1.5531513 1.5117188 1.6719727 1.5117187 1.6719727 A 0.0825 0.0825 0 0 0 1.5213867 1.7871094 A 0.0825 0.0825 0 0 0 1.6368164 1.7791992 C 1.6368164 1.7791992 1.7606941 1.6355198 1.8222656 1.4200195 C 1.8460259 1.3368593 1.8597024 1.2410136 1.8539062 1.1384766 z\" color=\"#000\" paint-order=\"markers stroke fill\" style=\"-inkscape-stroke:none\"/><path fill=\"#fc7f7f\" d=\"M.08295 2.0529 2.0502.07965 2.31705.34725.34965 2.32035ZM-1.2804596 3.0939027 3.0879072-1.2877874Z\"/></svg>
+"
+saturation = 2.0
+color_map = {
+Color(1, 0.37254903, 0.37254903, 1): Color(1, 0.47, 0.42, 1),
+Color(0.37254903, 1, 0.5921569, 1): Color(0.45, 0.95, 0.5, 1),
+Color(1, 0.8666667, 0.39607844, 1): Color(0.83, 0.78, 0.62, 1)
+}
+
+[sub_resource type="DPITexture" id="DPITexture_btifn"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" xml:space=\"preserve\" width=\"16\" height=\"16\" version=\"1.0\" viewBox=\"0 0 2.4 2.4\"><path fill=\"#e0e0e0\" d=\"M1.252.15a.1.1 0 0 0-.082.03L.6.75H.318C.225.75.15.817.15.9v.6c0 .083.075.15.168.15H.6l.57.57c.066.067.18.02.18-.074V.256A.106.106 0 0 0 1.252.15\" paint-order=\"markers stroke fill\"/><path fill=\"none\" stroke=\"#e0e0e0\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\".165\" d=\"M1.575.675c.45.525 0 1.05 0 1.05m.3-1.35c.675.825 0 1.65 0 1.65\" paint-order=\"markers stroke fill\"/></svg>
+"
+saturation = 2.0
+color_map = {
+Color(1, 0.37254903, 0.37254903, 1): Color(1, 0.47, 0.42, 1),
+Color(0.37254903, 1, 0.5921569, 1): Color(0.45, 0.95, 0.5, 1),
+Color(1, 0.8666667, 0.39607844, 1): Color(0.83, 0.78, 0.62, 1)
+}
+
+[sub_resource type="DPITexture" id="DPITexture_e1hcn"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" width=\"24\" height=\"32\" viewBox=\"0 0 6.35 8.467\"><defs><linearGradient id=\"a\"><stop offset=\"0\" stop-color=\"#fff\" stop-opacity=\".3\"/><stop offset=\"1\" stop-color=\"#fff\" stop-opacity=\"0\"/></linearGradient><linearGradient xlink:href=\"#a\" id=\"b\" x1=\"4.233\" x2=\"4.233\" y1=\"0\" y2=\"6.35\" gradientTransform=\"translate(-8.467)\" gradientUnits=\"userSpaceOnUse\"/></defs><path fill=\"url(#b)\" d=\"M-8.467 0H0V6.35H-8.467z\" paint-order=\"fill markers stroke\" transform=\"rotate(-90)\"/></svg>
 "
 
-[node name="Margin" type="MarginContainer"]
+[sub_resource type="DPITexture" id="DPITexture_tq6t8"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" width=\"32\" height=\"24\" viewBox=\"0 0 8.467 6.35\"><defs><linearGradient id=\"a\"><stop offset=\"0\" stop-color=\"#fff\" stop-opacity=\".3\"/><stop offset=\"1\" stop-color=\"#fff\" stop-opacity=\"0\"/></linearGradient><linearGradient xlink:href=\"#a\" id=\"b\" x1=\"4.233\" x2=\"4.233\" y1=\"0\" y2=\"6.35\" gradientUnits=\"userSpaceOnUse\"/></defs><path fill=\"url(#b)\" d=\"M0 0H8.467V6.35H0z\" paint-order=\"fill markers stroke\"/></svg>
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nkkuw"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(1, 1, 1, 0.75)
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 0.75)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+expand_margin_left = 4.0
+expand_margin_top = 4.0
+expand_margin_right = 4.0
+expand_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xpmuu"]
+
+[sub_resource type="Theme" id="Theme_i17ug"]
+ScrollContainer/colors/scroll_hint_horizontal_color = Color(0, 0, 0, 1)
+ScrollContainer/colors/scroll_hint_vertical_color = Color(0, 0, 0, 1)
+ScrollContainer/icons/scroll_hint_horizontal = SubResource("DPITexture_e1hcn")
+ScrollContainer/icons/scroll_hint_vertical = SubResource("DPITexture_tq6t8")
+ScrollContainer/styles/focus = SubResource("StyleBoxFlat_nkkuw")
+ScrollContainer/styles/panel = SubResource("StyleBoxEmpty_xpmuu")
+
+[sub_resource type="DPITexture" id="DPITexture_xpmuu"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" xml:space=\"preserve\" width=\"16\" height=\"16\" version=\"1.0\" viewBox=\"0 0 2.4 2.4\"><path fill=\"#e0e0e0\" d=\"M 1.2518555 0.15 A 0.1 0.1 0 0 0 1.1701172 0.17988281 L 0.6 0.75 L 0.31787109 0.75 C 0.22487119 0.75 0.15 0.81700008 0.15 0.9 L 0.15 1.5 C 0.15 1.5424221 0.16969512 1.5805593 0.20126953 1.6078125 L 1.35 0.45527344 L 1.35 0.25605469 A 0.106 0.106 0 0 0 1.2518555 0.15 z M 1.35 1.6438477 L 0.97236328 2.0223633 L 1.1701172 2.2201172 C 1.2361171 2.2871171 1.35 2.239996 1.35 2.1459961 L 1.35 1.6438477 z\"/><path fill=\"#e0e0e0\" d=\"M 2.1984375 0.79306641 L 2.0660156 0.92578125 C 2.1142629 1.1320246 2.0935608 1.3239034 2.0487305 1.4882812 C 1.9692536 1.7796963 1.8105469 1.9725586 1.8105469 1.9725586 A 0.0825 0.0825 0 0 0 1.8222656 2.0879883 A 0.0825 0.0825 0 0 0 1.9394531 2.0780273 C 1.9394531 2.0780273 2.1176607 1.8586814 2.2069336 1.5313477 C 2.2638362 1.3227069 2.2834498 1.0648044 2.1984375 0.79306641 z M 1.8539062 1.1384766 L 1.6790039 1.3136719 C 1.6747238 1.3346601 1.6697313 1.3550615 1.6640625 1.3749023 C 1.6131343 1.5531513 1.5117188 1.6719727 1.5117187 1.6719727 A 0.0825 0.0825 0 0 0 1.5213867 1.7871094 A 0.0825 0.0825 0 0 0 1.6368164 1.7791992 C 1.6368164 1.7791992 1.7606941 1.6355198 1.8222656 1.4200195 C 1.8460259 1.3368593 1.8597024 1.2410136 1.8539062 1.1384766 z\" color=\"#000\" paint-order=\"markers stroke fill\" style=\"-inkscape-stroke:none\"/><path fill=\"#fc7f7f\" d=\"M.08295 2.0529 2.0502.07965 2.31705.34725.34965 2.32035ZM-1.2804596 3.0939027 3.0879072-1.2877874Z\"/></svg>
+"
+saturation = 2.0
+color_map = {
+Color(1, 0.37254903, 0.37254903, 1): Color(1, 0.47, 0.42, 1),
+Color(0.37254903, 1, 0.5921569, 1): Color(0.45, 0.95, 0.5, 1),
+Color(1, 0.8666667, 0.39607844, 1): Color(0.83, 0.78, 0.62, 1)
+}
+
+[sub_resource type="DPITexture" id="DPITexture_qkm8y"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" xml:space=\"preserve\" width=\"16\" height=\"16\" version=\"1.0\" viewBox=\"0 0 2.4 2.4\"><path fill=\"#e0e0e0\" d=\"M1.252.15a.1.1 0 0 0-.082.03L.6.75H.318C.225.75.15.817.15.9v.6c0 .083.075.15.168.15H.6l.57.57c.066.067.18.02.18-.074V.256A.106.106 0 0 0 1.252.15\" paint-order=\"markers stroke fill\"/><path fill=\"none\" stroke=\"#e0e0e0\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\".165\" d=\"M1.575.675c.45.525 0 1.05 0 1.05m.3-1.35c.675.825 0 1.65 0 1.65\" paint-order=\"markers stroke fill\"/></svg>
+"
+saturation = 2.0
+color_map = {
+Color(1, 0.37254903, 0.37254903, 1): Color(1, 0.47, 0.42, 1),
+Color(0.37254903, 1, 0.5921569, 1): Color(0.45, 0.95, 0.5, 1),
+Color(1, 0.8666667, 0.39607844, 1): Color(0.83, 0.78, 0.62, 1)
+}
+
+[node name="Margin" type="MarginContainer" unique_id=1064431227]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -30,50 +123,63 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme = ExtResource("1_i17ug")
 theme_override_constants/margin_left = 32
 theme_override_constants/margin_top = 32
 theme_override_constants/margin_right = 32
 theme_override_constants/margin_bottom = 32
 script = SubResource("GDScript_43jmk")
 
-[node name="HBox" type="HBoxContainer" parent="."]
+[node name="HBox" type="HBoxContainer" parent="." unique_id=1241791488]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="HBox" type="HBoxContainer" parent="HBox"]
+[node name="HBox" type="HBoxContainer" parent="HBox" unique_id=498102205]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Master" type="VBoxContainer" parent="HBox/HBox"]
+[node name="Master" type="VBoxContainer" parent="HBox/HBox" unique_id=223319920]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="Master" type="VBoxContainer" parent="HBox/HBox/Master"]
+[node name="Master" type="VBoxContainer" parent="HBox/HBox/Master" unique_id=1389611287]
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 3
 theme_override_constants/separation = 0
 
-[node name="VolumeLabel" type="Label" parent="HBox/HBox/Master/Master"]
-custom_minimum_size = Vector2(32, 32)
+[node name="VolumeLabel" type="Label" parent="HBox/HBox/Master/Master" unique_id=113181299]
+custom_minimum_size = Vector2(48, 32)
 layout_mode = 2
 size_flags_stretch_ratio = 0.0
 theme_override_font_sizes/font_size = 24
 text = "100"
 horizontal_alignment = 1
 vertical_alignment = 1
-script = SubResource("GDScript_3ggvx")
 
-[node name="VVolumeSlider" type="VSlider" parent="HBox/HBox/Master/Master"]
+[node name="MasterMuteButton" type="CheckBox" parent="HBox/HBox/Master/Master" unique_id=1021946681]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_icons/checked = SubResource("DPITexture_o7ghw")
+theme_override_icons/unchecked = SubResource("DPITexture_nkkuw")
+
+[node name="VVolumeSlider" type="VSlider" parent="HBox/HBox/Master/Master" unique_id=1454866221 node_paths=PackedStringArray("display_label", "mute_button")]
 layout_mode = 2
 size_flags_horizontal = 1
 size_flags_vertical = 3
-step = 0.01
 value = 100.0
 script = ExtResource("1_r6x3m")
+label_display = true
+display_label = NodePath("../VolumeLabel")
+update_label_in_editor = true
+tooltip_display = null
+tooltip_show_decibels = null
+tooltip_show_bus_name = null
+mute_button = NodePath("../MasterMuteButton")
+_mute_button_create = Callable()
 bus_name = "Master"
 
-[node name="Master" type="Label" parent="HBox/HBox/Master/Master"]
+[node name="Master" type="Label" parent="HBox/HBox/Master/Master" unique_id=684667671]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
@@ -83,39 +189,52 @@ text = "Master"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="VBox" type="VBoxContainer" parent="HBox/HBox"]
+[node name="VBox" type="VBoxContainer" parent="HBox/HBox" unique_id=1112863015]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBox" type="HBoxContainer" parent="HBox/HBox/VBox"]
+[node name="HBox" type="HBoxContainer" parent="HBox/HBox/VBox" unique_id=1549082245]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 0
 
-[node name="SFX" type="VBoxContainer" parent="HBox/HBox/VBox/HBox"]
+[node name="SFX" type="VBoxContainer" parent="HBox/HBox/VBox/HBox" unique_id=483343538]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 0
 
-[node name="VolumeLabel" type="Label" parent="HBox/HBox/VBox/HBox/SFX"]
-custom_minimum_size = Vector2(32, 32)
+[node name="VolumeLabel" type="Label" parent="HBox/HBox/VBox/HBox/SFX" unique_id=1563452999]
+custom_minimum_size = Vector2(48, 32)
 layout_mode = 2
 size_flags_stretch_ratio = 0.0
 theme_override_font_sizes/font_size = 24
 text = "100"
 horizontal_alignment = 1
 vertical_alignment = 1
-script = SubResource("GDScript_3ggvx")
 
-[node name="VVolumeSlider" type="VSlider" parent="HBox/HBox/VBox/HBox/SFX"]
+[node name="SfxMuteButton" type="CheckBox" parent="HBox/HBox/VBox/HBox/SFX" unique_id=285957528]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_icons/checked = SubResource("DPITexture_i17ug")
+theme_override_icons/unchecked = SubResource("DPITexture_btifn")
+
+[node name="VVolumeSlider" type="VSlider" parent="HBox/HBox/VBox/HBox/SFX" unique_id=2084770138 node_paths=PackedStringArray("display_label", "mute_button")]
 layout_mode = 2
 size_flags_horizontal = 1
 size_flags_vertical = 3
 value = 100.0
 script = ExtResource("1_r6x3m")
-bus_name = "Master"
+label_display = true
+display_label = NodePath("../VolumeLabel")
+update_label_in_editor = true
+tooltip_display = null
+tooltip_show_decibels = null
+tooltip_show_bus_name = null
+mute_button = NodePath("../SfxMuteButton")
+_mute_button_create = Callable()
+bus_name = "SFX"
 
-[node name="SFX" type="Label" parent="HBox/HBox/VBox/HBox/SFX"]
+[node name="SFX" type="Label" parent="HBox/HBox/VBox/HBox/SFX" unique_id=2106678501]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
@@ -125,39 +244,53 @@ text = "SFX"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="VBox" type="VBoxContainer" parent="HBox/HBox/VBox/HBox"]
+[node name="ScrollContainer" type="ScrollContainer" parent="HBox/HBox/VBox/HBox/SFX" unique_id=1250368528]
+layout_mode = 2
+theme = SubResource("Theme_i17ug")
+
+[node name="VBox" type="VBoxContainer" parent="HBox/HBox/VBox/HBox" unique_id=77398615]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBox" type="HBoxContainer" parent="HBox/HBox/VBox/HBox/VBox"]
+[node name="HBox" type="HBoxContainer" parent="HBox/HBox/VBox/HBox/VBox" unique_id=1413222985]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Music" type="VBoxContainer" parent="HBox/HBox/VBox/HBox/VBox/HBox"]
+[node name="Music" type="VBoxContainer" parent="HBox/HBox/VBox/HBox/VBox/HBox" unique_id=489002582]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 3
 theme_override_constants/separation = 0
 
-[node name="VolumeLabel" type="Label" parent="HBox/HBox/VBox/HBox/VBox/HBox/Music"]
-custom_minimum_size = Vector2(32, 32)
+[node name="VolumeLabel" type="Label" parent="HBox/HBox/VBox/HBox/VBox/HBox/Music" unique_id=949694573]
+custom_minimum_size = Vector2(48, 32)
 layout_mode = 2
 size_flags_stretch_ratio = 0.0
 theme_override_font_sizes/font_size = 24
 text = "100"
 horizontal_alignment = 1
 vertical_alignment = 1
-script = SubResource("GDScript_3ggvx")
 
-[node name="VVolumeSlider" type="VSlider" parent="HBox/HBox/VBox/HBox/VBox/HBox/Music"]
+[node name="MusicMuteButton" type="CheckBox" parent="HBox/HBox/VBox/HBox/VBox/HBox/Music" unique_id=1228149940]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_icons/checked = SubResource("DPITexture_o7ghw")
+theme_override_icons/unchecked = SubResource("DPITexture_nkkuw")
+
+[node name="VVolumeSlider" type="VSlider" parent="HBox/HBox/VBox/HBox/VBox/HBox/Music" unique_id=82983370 node_paths=PackedStringArray("display_label", "mute_button")]
 layout_mode = 2
 size_flags_horizontal = 1
 size_flags_vertical = 3
 value = 100.0
 script = ExtResource("1_r6x3m")
+label_display = true
+display_label = NodePath("../VolumeLabel")
+update_label_in_editor = true
+mute_button = NodePath("../MusicMuteButton")
+_mute_button_create = Callable()
 bus_name = "Music"
 
-[node name="Music" type="Label" parent="HBox/HBox/VBox/HBox/VBox/HBox/Music"]
+[node name="Music" type="Label" parent="HBox/HBox/VBox/HBox/VBox/HBox/Music" unique_id=378128618]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
@@ -167,39 +300,50 @@ text = "Music"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="VBox" type="VBoxContainer" parent="HBox/HBox/VBox/HBox/VBox/HBox"]
+[node name="VBox" type="VBoxContainer" parent="HBox/HBox/VBox/HBox/VBox/HBox" unique_id=936209923]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBox" type="HBoxContainer" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox"]
+[node name="HBox" type="HBoxContainer" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox" unique_id=1585067879]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Ambience" type="VBoxContainer" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox"]
+[node name="Ambience" type="VBoxContainer" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox" unique_id=1360279453]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 3
 theme_override_constants/separation = 0
 
-[node name="VolumeLabel" type="Label" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/Ambience"]
-custom_minimum_size = Vector2(32, 32)
+[node name="VolumeLabel" type="Label" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/Ambience" unique_id=293959516]
+custom_minimum_size = Vector2(48, 32)
 layout_mode = 2
 size_flags_stretch_ratio = 0.0
 theme_override_font_sizes/font_size = 24
-text = "100"
+text = "57"
 horizontal_alignment = 1
 vertical_alignment = 1
-script = SubResource("GDScript_3ggvx")
 
-[node name="VVolumeSlider" type="VSlider" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/Ambience"]
+[node name="AmbienceMuteButton" type="CheckBox" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/Ambience" unique_id=1953379733]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_icons/checked = SubResource("DPITexture_xpmuu")
+theme_override_icons/unchecked = SubResource("DPITexture_qkm8y")
+
+[node name="VVolumeSlider" type="VSlider" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/Ambience" unique_id=1153112369 node_paths=PackedStringArray("display_label", "mute_button")]
 layout_mode = 2
 size_flags_horizontal = 1
 size_flags_vertical = 3
-value = 100.0
+value = 57.0
 script = ExtResource("1_r6x3m")
+label_display = true
+display_label = NodePath("../VolumeLabel")
+update_label_in_editor = true
+save_volume = true
+mute_button = NodePath("../AmbienceMuteButton")
+_mute_button_create = Callable()
 bus_name = "Ambience"
 
-[node name="Ambience" type="Label" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/Ambience"]
+[node name="Ambience" type="Label" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/Ambience" unique_id=1278893829]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
@@ -209,11 +353,11 @@ text = "Ambience"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="VBox" type="VBoxContainer" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox"]
+[node name="VBox" type="VBoxContainer" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox" unique_id=1350589212]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/VBox"]
+[node name="Label" type="Label" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/VBox" unique_id=1238721332]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 64
@@ -223,50 +367,58 @@ example"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="AmbienceSlider" type="HBoxContainer" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/VBox"]
+[node name="AmbienceSlider" type="HBoxContainer" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/VBox" unique_id=2111800280]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 8
 theme_override_constants/separation = 0
 
-[node name="VolumeSlider" type="HSlider" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/VBox/AmbienceSlider"]
+[node name="VolumeSlider" type="HSlider" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/VBox/AmbienceSlider" unique_id=1563424272 node_paths=PackedStringArray("display_label")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
-value = 100.0
+value = 57.0
+rounded = true
 script = ExtResource("1_6rln0")
+label_display = true
+display_label = NodePath("../VolumeLabel")
+update_label_in_editor = true
+save_volume = true
+save_on_drag_end = false
 bus_name = "Ambience"
 
-[node name="VolumeLabel" type="Label" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/VBox/AmbienceSlider"]
-custom_minimum_size = Vector2(32, 32)
+[node name="VolumeLabel" type="Label" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/VBox/AmbienceSlider" unique_id=2060086980]
+custom_minimum_size = Vector2(48, 32)
 layout_mode = 2
 size_flags_horizontal = 2
 size_flags_vertical = 1
 size_flags_stretch_ratio = 0.0
 theme_override_font_sizes/font_size = 24
-text = "100"
+text = "57"
 horizontal_alignment = 1
 vertical_alignment = 1
-script = SubResource("GDScript_3ggvx")
 
-[node name="Music" type="HBoxContainer" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox"]
+[node name="Music" type="HBoxContainer" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox" unique_id=1364868084]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
 theme_override_constants/separation = 0
 
-[node name="VolumeSlider" type="HSlider" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/Music"]
+[node name="VolumeSlider" type="HSlider" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/Music" unique_id=2015777265 node_paths=PackedStringArray("display_label")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
 value = 100.0
 script = ExtResource("1_6rln0")
+label_display = true
+display_label = NodePath("../VolumeLabel")
+update_label_in_editor = true
 bus_name = "Music"
 
-[node name="VolumeLabel" type="Label" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/Music"]
-custom_minimum_size = Vector2(32, 32)
+[node name="VolumeLabel" type="Label" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/Music" unique_id=827597281]
+custom_minimum_size = Vector2(48, 32)
 layout_mode = 2
 size_flags_horizontal = 2
 size_flags_vertical = 1
@@ -275,25 +427,27 @@ theme_override_font_sizes/font_size = 24
 text = "100"
 horizontal_alignment = 1
 vertical_alignment = 1
-script = SubResource("GDScript_3ggvx")
 
-[node name="HSFX" type="HBoxContainer" parent="HBox/HBox/VBox/HBox/VBox"]
+[node name="HSFX" type="HBoxContainer" parent="HBox/HBox/VBox/HBox/VBox" unique_id=35344432]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
 theme_override_constants/separation = 0
 
-[node name="VolumeSlider" type="HSlider" parent="HBox/HBox/VBox/HBox/VBox/HSFX"]
+[node name="VolumeSlider" type="HSlider" parent="HBox/HBox/VBox/HBox/VBox/HSFX" unique_id=2099561287 node_paths=PackedStringArray("display_label")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
 value = 100.0
 script = ExtResource("1_6rln0")
+label_display = true
+display_label = NodePath("../VolumeLabel")
+update_label_in_editor = true
 bus_name = "SFX"
 
-[node name="VolumeLabel" type="Label" parent="HBox/HBox/VBox/HBox/VBox/HSFX"]
-custom_minimum_size = Vector2(32, 32)
+[node name="VolumeLabel" type="Label" parent="HBox/HBox/VBox/HBox/VBox/HSFX" unique_id=723649007]
+custom_minimum_size = Vector2(48, 32)
 layout_mode = 2
 size_flags_horizontal = 2
 size_flags_vertical = 1
@@ -302,25 +456,27 @@ theme_override_font_sizes/font_size = 24
 text = "100"
 horizontal_alignment = 1
 vertical_alignment = 1
-script = SubResource("GDScript_3ggvx")
 
-[node name="Master" type="HBoxContainer" parent="HBox/HBox/VBox"]
+[node name="Master" type="HBoxContainer" parent="HBox/HBox/VBox" unique_id=143990241]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
 theme_override_constants/separation = 0
 
-[node name="VolumeSlider" type="HSlider" parent="HBox/HBox/VBox/Master"]
+[node name="VolumeSlider" type="HSlider" parent="HBox/HBox/VBox/Master" unique_id=323825648 node_paths=PackedStringArray("display_label")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
 value = 100.0
 script = ExtResource("1_6rln0")
+label_display = true
+display_label = NodePath("../VolumeLabel")
+update_label_in_editor = true
 bus_name = "Master"
 
-[node name="VolumeLabel" type="Label" parent="HBox/HBox/VBox/Master"]
-custom_minimum_size = Vector2(32, 32)
+[node name="VolumeLabel" type="Label" parent="HBox/HBox/VBox/Master" unique_id=864569868]
+custom_minimum_size = Vector2(48, 32)
 layout_mode = 2
 size_flags_horizontal = 2
 size_flags_vertical = 1
@@ -329,33 +485,27 @@ theme_override_font_sizes/font_size = 24
 text = "100"
 horizontal_alignment = 1
 vertical_alignment = 1
-script = SubResource("GDScript_3ggvx")
 
-[node name="Music" type="AudioStreamPlayer" parent="."]
+[node name="Music" type="AudioStreamPlayer" parent="." unique_id=378610413]
 stream = ExtResource("2_1a1sw")
 autoplay = true
+bus = &"Music"
 
-[node name="SFX" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("3_44ugk")
+[node name="SFX" type="AudioStreamPlayer" parent="." unique_id=1564480860]
+stream = ExtResource("7_btifn")
 autoplay = true
+bus = &"SFX"
 
-[node name="Ambience" type="AudioStreamPlayer" parent="."]
+[node name="Ambience" type="AudioStreamPlayer" parent="." unique_id=1376268660]
 stream = ExtResource("4_lwqib")
 autoplay = true
+bus = &"Ambience"
 
-[connection signal="value_changed" from="HBox/HBox/Master/Master/VVolumeSlider" to="HBox/HBox/Master/Master/VolumeLabel" method="set_text"]
 [connection signal="value_changed" from="HBox/HBox/Master/Master/VVolumeSlider" to="HBox/HBox/VBox/Master/VolumeSlider" method="set_value"]
-[connection signal="value_changed" from="HBox/HBox/VBox/HBox/SFX/VVolumeSlider" to="HBox/HBox/VBox/HBox/SFX/VolumeLabel" method="set_text"]
 [connection signal="value_changed" from="HBox/HBox/VBox/HBox/SFX/VVolumeSlider" to="HBox/HBox/VBox/HBox/VBox/HSFX/VolumeSlider" method="set_value"]
-[connection signal="value_changed" from="HBox/HBox/VBox/HBox/VBox/HBox/Music/VVolumeSlider" to="HBox/HBox/VBox/HBox/VBox/HBox/Music/VolumeLabel" method="set_text"]
 [connection signal="value_changed" from="HBox/HBox/VBox/HBox/VBox/HBox/Music/VVolumeSlider" to="HBox/HBox/VBox/HBox/VBox/HBox/VBox/Music/VolumeSlider" method="set_value"]
-[connection signal="value_changed" from="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/Ambience/VVolumeSlider" to="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/Ambience/VolumeLabel" method="set_text"]
 [connection signal="value_changed" from="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/Ambience/VVolumeSlider" to="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/VBox/AmbienceSlider/VolumeSlider" method="set_value"]
 [connection signal="value_changed" from="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/VBox/AmbienceSlider/VolumeSlider" to="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/Ambience/VVolumeSlider" method="set_value"]
-[connection signal="value_changed" from="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/VBox/AmbienceSlider/VolumeSlider" to="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/VBox/AmbienceSlider/VolumeLabel" method="set_text"]
 [connection signal="value_changed" from="HBox/HBox/VBox/HBox/VBox/HBox/VBox/Music/VolumeSlider" to="HBox/HBox/VBox/HBox/VBox/HBox/Music/VVolumeSlider" method="set_value"]
-[connection signal="value_changed" from="HBox/HBox/VBox/HBox/VBox/HBox/VBox/Music/VolumeSlider" to="HBox/HBox/VBox/HBox/VBox/HBox/VBox/Music/VolumeLabel" method="set_text"]
 [connection signal="value_changed" from="HBox/HBox/VBox/HBox/VBox/HSFX/VolumeSlider" to="HBox/HBox/VBox/HBox/SFX/VVolumeSlider" method="set_value"]
-[connection signal="value_changed" from="HBox/HBox/VBox/HBox/VBox/HSFX/VolumeSlider" to="HBox/HBox/VBox/HBox/VBox/HSFX/VolumeLabel" method="set_text"]
 [connection signal="value_changed" from="HBox/HBox/VBox/Master/VolumeSlider" to="HBox/HBox/Master/Master/VVolumeSlider" method="set_value"]
-[connection signal="value_changed" from="HBox/HBox/VBox/Master/VolumeSlider" to="HBox/HBox/VBox/Master/VolumeLabel" method="set_text"]
