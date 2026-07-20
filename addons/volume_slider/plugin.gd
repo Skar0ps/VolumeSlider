@@ -1,6 +1,9 @@
 @tool
 extends EditorPlugin
 
+const AUTOLOAD_NAME : String = "VolumeSliderBootstrap"
+const AUTOLOAD_PATH : String = "res://addons/volume_slider/scripts/volume_slider_bootstrap.gd"
+
 var inspector_plugin : EditorInspectorPlugin
 
 func _enter_tree():
@@ -15,7 +18,6 @@ func _exit_tree():
 	remove_inspector_plugin(inspector_plugin)
 
 func _enable_plugin():
-	# Adds the config_path to the project settings if not present
 	if not ProjectSettings.has_setting(VolumeUtils.SETTING_PATH):
 		ProjectSettings.set_setting(VolumeUtils.SETTING_PATH, VolumeUtils.DEFAULT_PATH)
 		ProjectSettings.set_initial_value(VolumeUtils.SETTING_PATH, VolumeUtils.DEFAULT_PATH)
@@ -26,3 +28,10 @@ func _enable_plugin():
 			"hint_string": "*.cfg"
 		})
 		ProjectSettings.save()
+	
+	if not ProjectSettings.has_setting("autoload/VolumeSliderBootstrap"):
+		add_autoload_singleton("VolumeSliderBootstrap", "res://addons/volume_slider/scripts/volume_slider_bootstrap.gd")
+
+func _disable_plugin():
+	if ProjectSettings.has_setting("autoload/VolumeSliderBootstrap"):
+		remove_autoload_singleton("VolumeSliderBootstrap")

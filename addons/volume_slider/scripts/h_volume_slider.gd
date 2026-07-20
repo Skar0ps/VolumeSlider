@@ -1,6 +1,7 @@
 ## A horizontal slider that controls the volume of an audio bus.
 ##
-## This node extends [HSlider] to automatically manage the volume of an audio bus specified by [member bus_name]. It converts the linear slider value (0-100)
+## This node extends [HSlider] to automatically manage the volume of an audio bus
+## specified by [member bus_name]. It converts the linear slider value (0-100)
 ## to the logarithmic dB scale required by the [AudioServer].
 ## It also handles muting the bus when the slider is at its minimum value.
 @icon("res://addons/volume_slider/icons/HVolumeSlider.svg")
@@ -11,6 +12,8 @@ class_name HVolumeSlider
 ## Emitted when the slider's value changes.
 ## Passes the new volume in decibels ([param volume_db]) as an argument.
 signal volume_changed(volume_db: float)
+signal muted()
+signal unmuted()
 
 ## The name of the audio bus to control.
 ## This list is populated dynamically from the project's audio bus layout.
@@ -46,17 +49,11 @@ var bus_name : String = "Master" : set=set_bus_name
 @export_custom(PROPERTY_HINT_GROUP_ENABLE,"") var save_volume : bool = false
 
 ## Location of the [ConfigFile] where the volume will be saved.
-##[br]Can also be modified in the [ProjectSettings] at
-##[member ProjectSettings.addons/volume_slider/config_path].
+##[br]Changing this will modify [member ProjectSettings.addons/volume_slider/config_path].
 @export_global_file("*.cfg") var config_path : String = VolumeUtils.DEFAULT_PATH :
 	set(new_path):
 		config_path = new_path
 		VolumeUtils.set_config_path(new_path)
-		var actual_config_path : String = VolumeUtils.get_config_path()
-		if new_path == actual_config_path:
-			print("Config path changed successful !")
-		else:
-			print("fuck it does not work at all")
 	get():
 		return VolumeUtils.get_config_path()
 
@@ -66,12 +63,77 @@ var bus_name : String = "Master" : set=set_bus_name
 		save_on_drag_end = new_value
 		_check_drag_ended_connection()
 
+@export_group("Accessibility")
+@export_subgroup("Tooltip Display","tooltip_")
+## If [code]true[/code], displays a tooltip showing the current volume when hovering the slider.
+@export_custom(PROPERTY_HINT_GROUP_ENABLE,"") var tooltip_display : bool = false
+
+## If [code]true[/code], includes the volume in decibels in the tooltip.
+@export var tooltip_show_decibels : bool = false
+
+## If [code]true[/code], includes the audio bus name in the tooltip.
+@export var tooltip_show_bus_name : bool = false
+@export_custom(PROPERTY_HINT_TYPE_STRING,"",PROPERTY_USAGE_EDITOR + PROPERTY_USAGE_READ_ONLY) var tooltip_preview : String :
+	get():
+		return _get_tooltip(Vector2.ZERO)
+
+@export_group("")
+
+## (Optionnal) Synchronize a mute button with this VolumeSlider
+@export var mute_button : Button :
+	set(new_button):
+		mute_button = new_button
+		notify_property_list_changed()
+
+## Creates a [ToggleButton] that will mute this slider volume
+@export_tool_button("Create a mute button","AudioMute") var _mute_button_create : Callable :
+	get(): return VolumeUtils.create_mute_button.bind(self, bus_name)
+
+## Icon used for the grabber when the slider's bus is muted.
+## Returns null if unset, use [method get_resolved_grabber_muted_icon] for display purposes.
+@export_custom(PROPERTY_HINT_RESOURCE_TYPE,"Texture2D",PROPERTY_USAGE_STORAGE) var grabber_muted_icon : Texture2D :
+	set(new_icon):
+		grabber_muted_icon = new_icon
+		_update_grabber_icon()
+
+## Grabber icon override "cache" to prevent grabber_muted from discarding the user set grabber icon override.
+var _saved_grabber_icon_override : Texture2D = null 
+
+## Icon used for the grabber_highlight when the slider's bus is muted.
+## Returns null if unset, use [method get_resolved_grabber_muted_highlight_icon] for display purposes.
+@export_custom(PROPERTY_HINT_RESOURCE_TYPE,"Texture2D",PROPERTY_USAGE_STORAGE) var grabber_muted_highlight_icon : Texture2D :
+	set(new_icon):
+		grabber_muted_highlight_icon = new_icon
+		_update_grabber_icon()
+
+## Grabber highlight icon override "cache" to prevent grabber_muted_highlight from discarding the user set override.
+var _saved_grabber_highlight_icon_override : Texture2D = null
+
+func _init() -> void:
+	value = 100.0
+
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		AudioServer.bus_layout_changed.connect(notify_property_list_changed)
+		# lambda to ignore the signal arguments
+		AudioServer.bus_renamed.connect(func(_a,_b,_c):notify_property_list_changed())
 	_check_drag_ended_connection()
-	_sync_slider_with_bus()
+	VolumeUtils.sync_slider_with_bus(self, bus_name, save_volume, config_path)
+	
+	if accessibility_name.is_empty():
+		accessibility_name = "%s Volume Slider" % bus_name.capitalize()
+	if accessibility_description.is_empty():
+		accessibility_description = "Adjusts the %s audio bus volume, currently %.0f percent" % [bus_name, value]
+	
 	mouse_exited.connect(release_focus)
+	if is_instance_valid(mute_button):
+		if not mute_button.toggled.is_connected(_on_mute_button_toggled):
+			mute_button.toggled.connect(_on_mute_button_toggled)
+		if not mute_button.tree_exited.is_connected(_on_mute_button_tree_exited):
+			mute_button.tree_exited.connect(_on_mute_button_tree_exited)
+		
+		muted.connect(mute_button.set_pressed_no_signal.bind(true))
+		unmuted.connect(mute_button.set_pressed_no_signal.bind(false))
 
 #region Helpers
 
@@ -84,14 +146,30 @@ func _check_drag_ended_connection() -> void:
 		if drag_ended.is_connected(_on_drag_ended):
 			drag_ended.disconnect(_on_drag_ended)
 
-## Synchronises the [member value] to the corresponding bus
-func _sync_slider_with_bus() -> void:
+func _on_mute_button_tree_exited() -> void:
+	mute_button = null
+	if Engine.is_editor_hint():
+		notify_property_list_changed()
+
+func _on_mute_button_toggled(is_muted: bool) -> void:
 	var bus_index : int = AudioServer.get_bus_index(bus_name)
-	if bus_index != -1:
-		var volume_db : float = AudioServer.get_bus_volume_db(bus_index)
-		if save_volume:
-			volume_db = VolumeUtils.load_persisted_volume(bus_name, config_path)
-		value = VolumeUtils.db_to_value(volume_db)
+	if bus_index == -1:
+		push_error("No audio bus with name: " + bus_name)
+		return
+	AudioServer.set_bus_mute(bus_index, is_muted)
+	_update_grabber_icon()
+
+func is_muted() -> bool:
+	return VolumeUtils.is_muted(self, bus_name)
+
+## Returns the icon actually used for the grabber when muted, resolving theme fallbacks if unset.
+## Used both for the actual grabber rendering and for the inspector's fallback preview.
+func get_resolved_grabber_muted_icon() -> Texture2D:
+	return VolumeUtils.get_resolved_grabber_muted_icon(self, grabber_muted_icon)
+
+## Returns the icon actually used for grabber_highlight when muted, resolving theme fallbacks if unset.
+func get_resolved_grabber_muted_highlight_icon() -> Texture2D:
+	return VolumeUtils.get_resolved_grabber_muted_highlight_icon(self, grabber_muted_highlight_icon, get_resolved_grabber_muted_icon())
 
 #endregion
 
@@ -99,6 +177,7 @@ func _sync_slider_with_bus() -> void:
 # Converts the linear value to dB, mutes if necessary, and updates the bus volume.
 func _value_changed(new_value: float) -> void:
 	_update_label_text()
+	_update_grabber_icon.call_deferred()
 	if Engine.is_editor_hint():
 		return
 	var volume_db : float = VolumeUtils.compute_bus_volume_db(bus_name, self, new_value)
@@ -108,15 +187,16 @@ func _value_changed(new_value: float) -> void:
 
 ## Updates the [member display_label] text if the conditions are met
 func _update_label_text() -> void:
-	if Engine.is_editor_hint() and not update_label_in_editor:
-		return
-	if not label_display or not is_instance_valid(display_label):
-		return
-	
-	var displayed_value : String = str(value)
-	if round_display_volume or rounded:
-		displayed_value = str(roundi(value))
-	display_label.text = displayed_value
+	VolumeUtils.update_label_text(self, display_label, label_display, update_label_in_editor, round_display_volume or rounded)
+
+func _update_grabber_icon() -> void:
+	VolumeUtils.update_grabber_icon(
+		self, bus_name,
+		get_resolved_grabber_muted_icon(),
+		get_resolved_grabber_muted_highlight_icon(),
+		_saved_grabber_icon_override,
+		_saved_grabber_highlight_icon_override
+	)
 
 ## Saves the volume on drag end if [member save_volume] is [code]true[/code], otherwise unused and disconnected
 func _on_drag_ended(value_changed: bool) -> void:
@@ -131,6 +211,9 @@ func _validate_property(property: Dictionary) -> void:
 		"round_display_volume":
 			if rounded:
 				property.usage = PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_READ_ONLY
+		"_mute_button_create":
+			if is_instance_valid(mute_button):
+				property.usage = PROPERTY_USAGE_NO_EDITOR
 
 # Used for displaying the dynamic dropdown of bus names in the inspector
 func _get_property_list() -> Array[Dictionary]:
@@ -140,15 +223,14 @@ func _get_property_list() -> Array[Dictionary]:
 			"type": TYPE_NIL,
 			"usage": PROPERTY_USAGE_GROUP
 		}
-	
-	var property_list : Array[Dictionary] = [
-		# Prevents bus_name from being in the Save Volume group
+	return [
 		empty_group,
 		# Adds a dropdown with the current AudioBusLayout bus names
 		VolumeUtils.get_bus_names_enum(),
-		]
-	
-	return property_list
+	]
+
+func _get_tooltip(at_position: Vector2) -> String:
+	return VolumeUtils.get_tooltip_text(self, bus_name, tooltip_display, tooltip_show_bus_name, tooltip_show_decibels, tooltip_text)
 
 #region Setters
 
@@ -163,10 +245,17 @@ func set_display_label(new_label:Label) -> void:
 	_update_label_text()
 
 func _set(property: StringName, value: Variant) -> bool:
-	# Hides dynamically round_display_volume based on the state of rounded
-	if property == "rounded":
-		notify_property_list_changed()
-		_update_label_text.call_deferred()
+	match property:
+		# Hides dynamically round_display_volume based on the state of rounded
+		"rounded":
+			notify_property_list_changed()
+			_update_label_text.call_deferred()
+		# "caches" the user set grabber icon override
+		"theme_override_icons/grabber":
+			_saved_grabber_icon_override = value if value != get_resolved_grabber_muted_icon() else null
+		# same thing for grabber highlight
+		"theme_override_icons/grabber_highlight":
+			_saved_grabber_highlight_icon_override = value if value != get_resolved_grabber_muted_highlight_icon() else null
 	return false
 
 #endregion
