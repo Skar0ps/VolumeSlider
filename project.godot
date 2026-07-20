@@ -33,4 +33,4 @@ VolumeSliderBootstrap="*uid://dkb4karbehgee"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/volume_slider/plugin.cfg")
+enabled=PackedStringArray("res://addons/GDQuest_GDScript_formatter/plugin.cfg", "res://addons/volume_slider/plugin.cfg")
