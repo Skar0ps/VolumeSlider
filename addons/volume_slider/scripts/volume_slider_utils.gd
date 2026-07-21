@@ -1,16 +1,9 @@
-## Utility functions shared by the volume slider addon: dB/linear conversion,
-## bus lookup, volume persistence, dynamic node creation (mute button/label),
-## and Inspector property list helpers.
 extends RefCounted
 
 class_name VolumeUtils
-
-## Key used to store/retrieve the volume value inside the [ConfigFile].
-const CONFIG_KEY := "volume_db"
-## [ProjectSettings] path storing the [ConfigFile] location used for volume persistence.
-const SETTING_PATH: String = "addons/volume_slider/config_path"
-## Default [ConfigFile] path used when [constant SETTING_PATH] is unset.
-const DEFAULT_PATH: String = "user://volume_slider.cfg"
+## Utility functions shared by the volume slider addon: dB/linear conversion,
+## bus lookup, dynamic node creation (mute button/label),
+## and Inspector property list helpers.
 
 ## Linear slider value corresponding to 0 dB (unity gain).
 const UNITY_GAIN_VALUE: float = 100.0
@@ -18,51 +11,6 @@ const UNITY_GAIN_VALUE: float = 100.0
 const MIN_DB_SETTING: String = "audio/buses/channel_disable_threshold_db"
 ## Layout mode value meaning "anchored inside a container" for [Control] nodes.
 const _LAYOUT_MODE_CONTAINER: int = 2
-
-#region Volume Persistence
-
-## Returns the [ConfigFile] path from the [ProjectSettings] [member ProjectSettings.addons/volume_slider/config_path]
-static func get_config_path() -> String:
-	return ProjectSettings.get_setting(SETTING_PATH, DEFAULT_PATH)
-
-
-## Sets the [ConfigFile] path in the [ProjectSettings] [member ProjectSettings.addons/volume_slider/config_path]
-static func set_config_path(path: String) -> void:
-	ProjectSettings.set_setting(SETTING_PATH, path)
-	ProjectSettings.save()
-
-
-## Loads the volume (in db) for the bus from the config file at the given [code]config_path[/code]
-static func load_persisted_volume(bus_name: String, config_path: String = get_config_path()) -> float:
-	var bus_current_volume: float = AudioServer.get_bus_volume_db(
-			AudioServer.get_bus_index(bus_name)
-	)
-	var config := ConfigFile.new()
-	if config.load(config_path) == OK:
-		return config.get_value(bus_name, CONFIG_KEY, bus_current_volume)
-	return bus_current_volume
-
-
-## Saves the volume (in db) for the bus to the config file at the given [code]config_path[/code]
-static func save_persisted_volume(
-		bus_name: String,
-		volume_db: float,
-		config_path: String = get_config_path(),
-) -> void:
-	var config := ConfigFile.new()
-	config.load(config_path)
-	config.set_value(bus_name, CONFIG_KEY, volume_db)
-	config.save(config_path)
-
-
-## Returns [code]true[/code] if the [ConfigFile] at [param config_path] has at least one persisted bus volume.
-static func has_persisted_volumes(config_path: String = get_config_path()) -> bool:
-	var config := ConfigFile.new()
-	if config.load(config_path) != OK:
-		return false
-	return not config.get_sections().is_empty()
-
-#endregion
 
 #region dB / Linear Conversion
 
@@ -110,17 +58,6 @@ static func get_bus_names_enum() -> Dictionary:
 	}
 
 
-## Returns the [ConfigFile] where the volume is saved, accessible in [member ProjectSettings.addons/volume_slider/config_path]
-static func get_config_path_export() -> Dictionary:
-	return {
-		"name": "config_path",
-		"type": TYPE_STRING,
-		"hint": PROPERTY_HINT_GLOBAL_FILE,
-		"hint_string": "*.cfg",
-		"usage": PROPERTY_USAGE_EDITOR,
-	}
-
-
 ## Returns [code]true[/code] if the given bus name exists
 static func is_valid_bus(bus_name: String) -> bool:
 	return AudioServer.get_bus_index(bus_name) != -1
@@ -154,8 +91,10 @@ static func compute_bus_volume_db(bus_name: String, slider: Range, new_value: fl
 
 	if not was_muted and should_mute:
 		slider.muted.emit()
+		prints("MUTED EMIT FOR",bus_name)
 	if was_muted and not should_mute:
 		slider.unmuted.emit()
+		prints("UNMUTED EMIT FOR",bus_name)
 
 	AudioServer.set_bus_mute(bus_index, should_mute)
 	var volume_db: float = value_to_db(new_value)
@@ -163,14 +102,10 @@ static func compute_bus_volume_db(bus_name: String, slider: Range, new_value: fl
 	return volume_db
 
 
-## Synchronises the slider to the corresponding bus volume, and applies the
-## persisted volume to the [AudioServer] bus itself if [param save_volume] is enabled,
-## so the bus is corrected even if this is the first slider referencing it.
+## Synchronises the slider to the corresponding bus volume.
 static func sync_slider_with_bus(
 		slider: Range,
 		bus_name: String,
-		save_volume: bool,
-		config_path: String = get_config_path(),
 ) -> void:
 	var bus_index: int = AudioServer.get_bus_index(bus_name)
 	if bus_index == -1:
@@ -183,10 +118,6 @@ static func sync_slider_with_bus(
 		return
 
 	var volume_db: float = AudioServer.get_bus_volume_db(bus_index)
-	if save_volume:
-		volume_db = load_persisted_volume(bus_name, config_path)
-		AudioServer.set_bus_volume_db(bus_index, volume_db)
-
 	var target_value: float = db_to_value(volume_db)
 	slider.set_value_no_signal(target_value)
 
@@ -280,17 +211,16 @@ static func update_grabber_icon(
 
 
 ## Refreshes [param display_label]'s text with the slider's current value,
-## respecting [param label_display], [param update_in_editor], and rounding settings.
+## respecting [param update_in_editor], and rounding settings.
 static func update_label_text(
 		slider: Range,
 		display_label: Label,
-		label_display: bool,
 		update_in_editor: bool,
 		round_display_volume: bool,
 ) -> void:
 	if Engine.is_editor_hint() and not update_in_editor:
 		return
-	if not label_display or not is_instance_valid(display_label):
+	if not is_instance_valid(display_label):
 		return
 	var displayed_value: String = str(slider.value)
 	if round_display_volume:
@@ -305,8 +235,10 @@ static func update_label_text(
 ## VBoxContainer/HBoxContainer, i.e. its current parent isn't already
 ## the matching box container type.
 static func _needs_new_container(slider: Slider, parent: Node) -> bool:
-	return not ((parent is VBoxContainer and slider is VVolumeSlider)
-	or (parent is HBoxContainer and slider is HVolumeSlider))
+	return not (
+		(parent is VBoxContainer and slider is VVolumeSlider)
+		or (parent is HBoxContainer and slider is HVolumeSlider)
+	)
 
 
 ## Snapshots the full rect definition (anchors + offsets + size flags) of a
@@ -360,10 +292,9 @@ static func _apply_rect_to_container(container: Control, slider: Slider, snapsho
 
 
 ## Grows the container's minimum size to fit its content. Only touches
-## custom_minimum_size, never .size directly, since Control automatically
+## [member Control.custom_minimum_size], never .size directly, since [Control] automatically
 ## clamps its actual size to the combined minimum on the next layout pass
-## regardless of anchor configuration — this is the only warning-free way
-## to influence size on a Control with arbitrary/non-equal anchors.
+## regardless of anchor configuration
 static func _fit_container_to_content(container: Control) -> void:
 	if not is_instance_valid(container):
 		return
@@ -386,7 +317,6 @@ static func _shrink_on_cross_axis(control: Control, slider: Slider) -> void:
 
 ## Creates a [CheckBox] mute button next to [param slider], reparenting it into a
 ## [VBoxContainer]/[HBoxContainer] if its parent isn't already one.
-## The whole operation is registered as a single undoable editor action.
 static func create_mute_button(slider: Slider, bus_name: String) -> void:
 	if not Engine.is_editor_hint():
 		return
@@ -397,15 +327,14 @@ static func create_mute_button(slider: Slider, bus_name: String) -> void:
 		return
 	if is_instance_valid(slider.mute_button):
 		return
-
+	
 	var bus_index: int = AudioServer.get_bus_index(bus_name)
 	if bus_index == -1:
 		push_error("No audio bus with name: " + bus_name)
 		return
-
-	# Defer the whole action so it runs AFTER the inspector button's
-	# signal emission has fully unwound, avoiding the "freed while a
-	# signal is being emitted" error.
+	
+	# Defer the whole action so it runs AFTER the inspector button's signal emission
+	# has fully unwound, avoiding the "freed while a signal is being emitted" error.
 	_create_mute_button_deferred.call_deferred(slider, bus_name, bus_index)
 
 
@@ -414,11 +343,11 @@ static func create_mute_button(slider: Slider, bus_name: String) -> void:
 static func _create_mute_button_deferred(slider: Slider, bus_name: String, bus_index: int) -> void:
 	if not is_instance_valid(slider) or is_instance_valid(slider.mute_button):
 		return
-
+	
 	var parent: Node = slider.get_parent()
 	var needs_new_container: bool = _needs_new_container(slider, parent)
 	var slider_snapshot: Dictionary = _snapshot_control_rect(slider)
-
+	
 	var container: Control = parent
 	if needs_new_container:
 		container = VBoxContainer.new() if slider is VVolumeSlider else HBoxContainer.new()
@@ -426,12 +355,13 @@ static func _create_mute_button_deferred(slider: Slider, bus_name: String, bus_i
 		_apply_rect_to_container(container, slider, slider_snapshot)
 		slider.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		slider.size_flags_vertical = Control.SIZE_EXPAND_FILL
-
+	
 	var mute_button := CheckBox.new()
 	mute_button.name = bus_name.capitalize() + "MuteButton"
 	mute_button.button_pressed = AudioServer.is_bus_mute(bus_index)
+	mute_button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	_shrink_on_cross_axis(mute_button, slider)
-
+	
 	if is_instance_valid(EditorInterface.get_editor_theme()):
 		var editor_theme: Theme = EditorInterface.get_editor_theme()
 		if editor_theme.has_icon(&"AudioMute", &"EditorIcons"):
@@ -444,10 +374,10 @@ static func _create_mute_button_deferred(slider: Slider, bus_name: String, bus_i
 					&"unchecked",
 					editor_theme.get_icon(&"AudioStreamPlayer", &"EditorIcons"),
 			)
-
+	
 	var owner: Node = slider.owner
 	var original_index: int = slider.get_index()
-
+	
 	var undo_redo: EditorUndoRedoManager = EditorInterface.get_editor_undo_redo()
 	undo_redo.create_action("Create Mute Button", UndoRedo.MERGE_DISABLE, slider)
 	undo_redo.add_do_method(
@@ -476,7 +406,7 @@ static func _create_mute_button_deferred(slider: Slider, bus_name: String, bus_i
 	if needs_new_container:
 		undo_redo.add_do_reference(container)
 	undo_redo.commit_action()
-
+	
 	if needs_new_container:
 		_fit_container_to_content.call_deferred(container)
 
@@ -513,7 +443,7 @@ static func _do_create_mute_button(
 ## "undo" operation of [method create_mute_button] for the editor UndoRedo.
 ## Restores the slider's exact original rect via anchors + offsets, never
 ## via .size/.position, to avoid fighting Control's internal anchor-driven
-## size computation (see warning in control.cpp _set_size()).
+## size computation.
 static func _undo_create_mute_button(
 		slider: Slider,
 		parent: Node,
@@ -565,11 +495,11 @@ static func create_label(slider: Range, bus_name: String) -> void:
 static func _create_label_deferred(slider: Range, bus_name: String) -> void:
 	if not is_instance_valid(slider) or is_instance_valid(slider.display_label):
 		return
-
+	
 	var parent: Node = slider.get_parent()
 	var needs_new_container: bool = _needs_new_container(slider, parent)
 	var slider_snapshot: Dictionary = _snapshot_control_rect(slider)
-
+	
 	var container: Control = parent
 	if needs_new_container:
 		container = VBoxContainer.new() if slider is VVolumeSlider else HBoxContainer.new()
@@ -577,15 +507,23 @@ static func _create_label_deferred(slider: Range, bus_name: String) -> void:
 		_apply_rect_to_container(container, slider, slider_snapshot)
 		slider.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		slider.size_flags_vertical = Control.SIZE_EXPAND_FILL
-
+	
 	var display_label := Label.new()
 	display_label.name = bus_name.capitalize() + "VolumeLabel"
 	display_label.text = str(roundi(slider.value))
-	_shrink_on_cross_axis(display_label, slider)
+	display_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 
+	# setting the label width to be at least as big as the maximum value (3 digits)
+	var theme_font : Font = slider.get_theme_font("font", "Label")
+	var theme_label_font_size : int = slider.get_theme_font_size("font_size","Label")	
+	var max_digit_width : int = theme_font.get_string_size("000",HORIZONTAL_ALIGNMENT_CENTER,-1,theme_label_font_size).x
+	display_label.custom_minimum_size.x = max_digit_width
+
+	_shrink_on_cross_axis(display_label, slider)
+	
 	var owner: Node = slider.owner
 	var original_index: int = slider.get_index()
-
+	
 	var undo_redo: EditorUndoRedoManager = EditorInterface.get_editor_undo_redo()
 	undo_redo.create_action("Create Volume Label", UndoRedo.MERGE_DISABLE, slider)
 	undo_redo.add_do_method(
@@ -636,13 +574,12 @@ static func _do_create_label(
 		slider.owner = owner
 		slider.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		slider.size_flags_vertical = Control.SIZE_EXPAND_FILL
-
+	
 	container.add_child(display_label, true)
 	container.move_child(display_label, slider.get_index() + 1)
 	display_label.owner = owner
-
+	
 	slider.display_label = display_label
-	slider.label_display = true
 	if not display_label.tree_exited.is_connected(slider._on_display_label_tree_exited):
 		display_label.tree_exited.connect(slider._on_display_label_tree_exited)
 
@@ -661,7 +598,6 @@ static func _undo_create_label(
 	if display_label.tree_exited.is_connected(slider._on_display_label_tree_exited):
 		display_label.tree_exited.disconnect(slider._on_display_label_tree_exited)
 	slider.display_label = null
-	slider.label_display = false
 	container.remove_child(display_label)
 
 	if needs_new_container:
@@ -679,15 +615,15 @@ static func _undo_create_label(
 ## Performs all [code]_ready()[/code] setup shared by both slider orientations:
 ## editor bus-layout listeners, drag_ended connection, bus synchronization,
 ## default accessibility strings, and optional [member mute_button] wiring.
-static func setup_slider_ready(slider: Slider, bus_name: String, save_volume: bool) -> void:
+static func setup_slider_ready(slider: Slider, bus_name: String) -> void:
 	if Engine.is_editor_hint():
+		# bus modification signals connection to update the bus_name enum
 		if not AudioServer.bus_layout_changed.is_connected(slider.notify_property_list_changed):
 			AudioServer.bus_layout_changed.connect(slider.notify_property_list_changed)
-		if not AudioServer.bus_renamed.is_connected(slider._on_bus_renamed):
-			AudioServer.bus_renamed.connect(slider._on_bus_renamed)
-	slider._check_drag_ended_connection()
-	sync_slider_with_bus(slider, bus_name, save_volume)
-
+		if not AudioServer.bus_renamed.is_connected(slider.notify_property_list_changed):
+			AudioServer.bus_renamed.connect(slider.notify_property_list_changed)
+	sync_slider_with_bus(slider, bus_name)
+	
 	if slider.accessibility_name.is_empty():
 		slider.accessibility_name = "%s Volume Slider" % bus_name.capitalize()
 	if slider.accessibility_description.is_empty():
@@ -695,24 +631,18 @@ static func setup_slider_ready(slider: Slider, bus_name: String, save_volume: bo
 			bus_name,
 			slider.value,
 		]
-
+	
 	slider.mouse_exited.connect(slider.release_focus)
+	check_mute_button_signals(slider, bus_name)
+
+## Checks [member mute_button] signals and wires them up if needed.
+static func check_mute_button_signals(slider: Slider, bus_name: String) -> void:
 	if is_instance_valid(slider.mute_button):
 		if not slider.mute_button.toggled.is_connected(slider._on_mute_button_toggled):
 			slider.mute_button.toggled.connect(slider._on_mute_button_toggled)
 		if not slider.mute_button.tree_exited.is_connected(slider._on_mute_button_tree_exited):
 			slider.mute_button.tree_exited.connect(slider._on_mute_button_tree_exited)
-		slider.muted.connect(slider.mute_button.set_pressed_no_signal.bind(true))
-		slider.unmuted.connect(slider.mute_button.set_pressed_no_signal.bind(false))
-
-
-## Connects or disconnects the [signal Range.drag_ended] signal based on [param save_on_drag_end].
-static func check_drag_ended_connection(slider: Slider, save_on_drag_end: bool) -> void:
-	if save_on_drag_end:
-		if not slider.drag_ended.is_connected(slider._on_drag_ended):
-			slider.drag_ended.connect(slider._on_drag_ended)
-	elif slider.drag_ended.is_connected(slider._on_drag_ended):
-		slider.drag_ended.disconnect(slider._on_drag_ended)
+		slider.mute_button.set_pressed_no_signal(is_muted(slider, bus_name))
 
 
 ## Clears [member display_label] when the assigned [Label] leaves the tree,
@@ -739,39 +669,29 @@ static func on_mute_button_toggled(slider: Slider, bus_name: String, is_muted_no
 		push_error("No audio bus with name: " + bus_name)
 		return
 	AudioServer.set_bus_mute(bus_index, is_muted_now)
-	slider._update_grabber_icon()
+	slider.update_grabber_icon()
 
 
 ## Handles the slider's [code]value_changed[/code] logic: label/icon refresh,
 ## bus volume update, and [signal volume_changed] emission.
 static func handle_value_changed(slider: Slider, bus_name: String, new_value: float) -> void:
-	slider._update_label_text()
-	slider._update_grabber_icon.call_deferred()
+	slider.update_label_text()
+	slider.update_grabber_icon.call_deferred()
 	if Engine.is_editor_hint():
 		return
 	var volume_db: float = compute_bus_volume_db(bus_name, slider, new_value)
 	if is_nan(volume_db):
 		return
+	if is_instance_valid(slider.mute_button):
+		slider.mute_button.set_pressed_no_signal(is_muted(slider, bus_name))
 	slider.emit_signal("volume_changed", volume_db)
-
-
-## Saves the volume on drag end if [param save_volume] is [code]true[/code] and the value actually changed.
-static func handle_drag_ended(
-		slider: Slider,
-		bus_name: String,
-		save_volume: bool,
-		value_changed: bool,
-) -> void:
-	if save_volume and value_changed:
-		save_persisted_volume(bus_name, value_to_db(slider.value))
 
 #endregion
 
 #region Shared Inspector Property Handling
 
 ## Shared [code]_validate_property()[/code] logic for both slider orientations:
-## hides irrelevant [Range] properties and toggles read-only/visibility states
-## based on the current [member rounded], [member display_label], and [member mute_button] state.
+## hides irrelevant [Range] properties and toggles read-only/visibility states.
 static func validate_slider_property(slider: Slider, property: Dictionary) -> void:
 	match property.name:
 		# Hide useless range properties for a volume slider
@@ -779,22 +699,24 @@ static func validate_slider_property(slider: Slider, property: Dictionary) -> vo
 			property.usage = PROPERTY_USAGE_NO_EDITOR
 		# Make round_display_volume read only when round is true
 		"round_display_volume":
-			if slider.rounded or not is_instance_valid(slider.display_label):
+			if slider.rounded:
 				property.usage = PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_READ_ONLY
+			if not is_instance_valid(slider.display_label):
+				property.usage = PROPERTY_USAGE_NO_EDITOR
 		"update_label_in_editor":
 			if not is_instance_valid(slider.display_label):
-				property.usage = PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_READ_ONLY
-		"_mute_button_create":
-			if is_instance_valid(slider.mute_button):
 				property.usage = PROPERTY_USAGE_NO_EDITOR
 		"_label_create":
 			if is_instance_valid(slider.display_label):
+				property.usage = PROPERTY_USAGE_NO_EDITOR
+		"_mute_button_create":
+			if is_instance_valid(slider.mute_button):
 				property.usage = PROPERTY_USAGE_NO_EDITOR
 
 
 ## Shared [code]_get_property_list()[/code] logic: injects the dynamic bus name dropdown.
 static func build_slider_property_list() -> Array[Dictionary]:
-	#HACK : here to prevent the bus names from being included in the save group
+	#HACK : here to prevent the bus names from being included in another group
 	var empty_group: Dictionary[String, Variant] = {
 		"name": "",
 		"type": TYPE_NIL,
@@ -811,7 +733,7 @@ static func handle_set(slider: Slider, property: StringName, value: Variant) -> 
 		# Hides dynamically round_display_volume based on the state of rounded
 		"rounded":
 			slider.notify_property_list_changed()
-			slider._update_label_text.call_deferred()
+			slider.update_label_text.call_deferred()
 		# "caches" the user set grabber icon override
 		"theme_override_icons/grabber":
 			slider._saved_grabber_icon_override = value if value != slider.get_resolved_grabber_muted_icon() else null
@@ -821,19 +743,22 @@ static func handle_set(slider: Slider, property: StringName, value: Variant) -> 
 
 
 ## Sets [param slider]'s [member bus_name] after validating it exists, then
-## resynchronizes the slider's value with the new bus's current (or persisted) volume.
+## resynchronizes the slider's value with the new bus's current volume.[br]
 ## Returns the resulting bus name to assign (either the new one, or the unchanged current one on failure).
-static func set_slider_bus_name(slider: Slider, new_bus_name: String, save_volume: bool) -> String:
+static func set_slider_bus_name(slider: Slider, new_bus_name: String) -> String:
 	if is_valid_bus(new_bus_name):
-		sync_slider_with_bus(slider, new_bus_name, save_volume)
+		sync_slider_with_bus(slider, new_bus_name)
 		return new_bus_name
 	push_error('No bus found with name : "', new_bus_name, '"')
 	return slider.bus_name
 
 
 ## Refreshes the Inspector and the label text after [member display_label] is reassigned.
-static func set_slider_display_label(slider: Slider, new_label: Label) -> void:
+static func set_slider_display_label(slider: Slider,display_label: Label) -> void:
+	if is_instance_valid(display_label):
+		if not display_label.tree_exited.is_connected(slider._on_display_label_tree_exited):
+			display_label.tree_exited.connect(slider._on_display_label_tree_exited)
 	slider.notify_property_list_changed()
-	slider._update_label_text()
+	slider.update_label_text()
 
 #endregion

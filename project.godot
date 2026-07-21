@@ -27,10 +27,6 @@ config/icon="uid://dwe62b5raxtcr"
 
 buses/default_bus_layout="uid://dnr4n5gi8nmwr"
 
-[autoload]
-
-VolumeSliderBootstrap="*uid://dkb4karbehgee"
-
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/GDQuest_GDScript_formatter/plugin.cfg", "res://addons/volume_slider/plugin.cfg")

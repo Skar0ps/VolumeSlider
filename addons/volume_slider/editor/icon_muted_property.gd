@@ -7,7 +7,6 @@ extends EditorProperty
 ## resource, reveals a read-only [EditorInspector] below it to display the resource's
 ## properties without switching the main Inspector view. Clicking the resource again
 ## hides the sub-inspector.[br]
-## Hope it's useful to someone.
 ##
 ## @experimental: This relies on internal Inspector behavior (manually instancing
 ## [EditorInspector] as a sub-inspector) that is not officially documented as a
@@ -95,16 +94,17 @@ func _close_sub_inspector() -> void:
 	deselect()
 
 
-## Refreshes [member picker] to reflect the edited object's current value.[br]
-## If the property is unset ([code]null[/code]) and the edited object exposes a
-## [method Object.get_resolved_grabber_muted_icon] method, the picker falls back
-## to displaying that resolved icon instead of leaving the property empty.
+# Refreshes [member picker] to reflect the edited object's current value.[br]
+# If the property is unset ([code]null[/code]) and the edited object exposes a
+# [method Object.get_resolved_grabber_muted_icon] method, the picker falls back
+# to displaying that resolved icon instead of leaving the property empty.
 func _update_property() -> void:
 	var object: Object = get_edited_object()
 	var prop_name: String = get_edited_property()
 	var raw_value: Texture2D = object[prop_name]
 	
-	set_checked(raw_value != null)
+	# deferred to prevent the user from checking it with a null raw value
+	set_checked.call_deferred(raw_value != null)
 	
 	_updating = true
 	if raw_value == null:

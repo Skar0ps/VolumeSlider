@@ -29,10 +29,8 @@ var bus_name: String = "Master":
 	set = set_bus_name
 
 @export_group("Label Display")
-## If [code]true[/code], uses a [Label] to display the current volume
-@export_custom(PROPERTY_HINT_GROUP_ENABLE, "") var label_display: bool = false
 
-## Label node used to display the volume
+## (Optional) Label node used to display the volume.
 @export var display_label: Label:
 	set = set_display_label
 
@@ -46,7 +44,7 @@ var bus_name: String = "Master":
 @export var round_display_volume: bool = true:
 	set(new_value):
 		round_display_volume = new_value
-		_update_label_text()
+		update_label_text()
 	get:
 		if not rounded:
 			return round_display_volume
@@ -57,29 +55,23 @@ var bus_name: String = "Master":
 @export var update_label_in_editor: bool = false:
 	set(new_value):
 		update_label_in_editor = new_value
-		_update_label_text()
+		update_label_text()
 
-@export_group("Save Volume")
-## If [code]true[/code], saves the volume to the [ConfigFile] at the [member config_path]
-@export_custom(PROPERTY_HINT_GROUP_ENABLE, "") var save_volume: bool = false
+@export_group("Mute Button")
 
-## Location of the [ConfigFile] where the volume will be saved.
-##[br]Changing this will modify [member ProjectSettings.addons/volume_slider/config_path].
-@export_global_file("*.cfg") var config_path: String = VolumeUtils.DEFAULT_PATH:
-	set(new_path):
-		config_path = new_path
-		VolumeUtils.set_config_path(new_path)
+## (Optional) Synchronize a mute button with this VolumeSlider.
+@export var mute_button: Button:
+	set(new_button):
+		mute_button = new_button
+		VolumeUtils.check_mute_button_signals(self, bus_name)
+		notify_property_list_changed()
+
+## Creates a [CheckBox] that will toggle the mute state of this slider volume.
+@export_tool_button("Create a mute button", "AudioMute") var _mute_button_create: Callable:
 	get ():
-		return VolumeUtils.get_config_path()
+		return VolumeUtils.create_mute_button.bind(self, bus_name)
 
-## If [code]true[/code], saves the volume for the bus when the user stops dragging the slider in the [ConfigFile] at [member config_path].
-@export var save_on_drag_end: bool = true:
-	set(new_value):
-		save_on_drag_end = new_value
-		_check_drag_ended_connection()
-
-@export_group("Accessibility")
-@export_subgroup("Tooltip Display", "tooltip_")
+@export_group("Tooltip Display", "tooltip_")
 ## If [code]true[/code], displays a tooltip showing the current volume when hovering the slider.
 @export_custom(PROPERTY_HINT_GROUP_ENABLE, "") var tooltip_display: bool = false
 
@@ -94,25 +86,12 @@ var bus_name: String = "Master":
 	get ():
 		return _get_tooltip(Vector2.ZERO)
 
-@export_group("")
-
-## (Optionnal) Synchronize a mute button with this VolumeSlider
-@export var mute_button: Button:
-	set(new_button):
-		mute_button = new_button
-		notify_property_list_changed()
-
-## Creates a [ToggleButton] that will mute this slider volume
-@export_tool_button("Create a mute button", "AudioMute") var _mute_button_create: Callable:
-	get ():
-		return VolumeUtils.create_mute_button.bind(self, bus_name)
-
 ## Icon used for the grabber when the slider's bus is muted.
 ## Returns null if unset, use [method get_resolved_grabber_muted_icon] for display purposes.
 @export_custom(PROPERTY_HINT_RESOURCE_TYPE, "Texture2D", PROPERTY_USAGE_STORAGE) var grabber_muted_icon: Texture2D:
 	set(new_icon):
 		grabber_muted_icon = new_icon
-		_update_grabber_icon()
+		update_grabber_icon()
 
 ## Grabber icon override "cache" to prevent grabber_muted from discarding the user set grabber icon override.
 var _saved_grabber_icon_override: Texture2D = null
@@ -122,7 +101,7 @@ var _saved_grabber_icon_override: Texture2D = null
 @export_custom(PROPERTY_HINT_RESOURCE_TYPE, "Texture2D", PROPERTY_USAGE_STORAGE) var grabber_muted_highlight_icon: Texture2D:
 	set(new_icon):
 		grabber_muted_highlight_icon = new_icon
-		_update_grabber_icon()
+		update_grabber_icon()
 
 ## Grabber highlight icon override "cache" to prevent grabber_muted_highlight from discarding the user set override.
 var _saved_grabber_highlight_icon_override: Texture2D = null
@@ -135,14 +114,9 @@ func _init() -> void:
 
 ## Delegates all shared ready-time setup to [method VolumeUtils.setup_slider_ready].
 func _ready() -> void:
-	VolumeUtils.setup_slider_ready(self, bus_name, save_volume)
+	VolumeUtils.setup_slider_ready(self, bus_name)
 
 #region Helpers
-
-## Connects or disconnects the drag_ended signal based on [member save_on_drag_end]
-func _check_drag_ended_connection() -> void:
-	VolumeUtils.check_drag_ended_connection(self, save_on_drag_end)
-
 
 ## Clears [member display_label] when the assigned [Label] leaves the tree.
 func _on_display_label_tree_exited() -> void:
@@ -185,18 +159,17 @@ func _value_changed(new_value: float) -> void:
 
 
 ## Updates the [member display_label] text if the conditions are met
-func _update_label_text() -> void:
+func update_label_text() -> void:
 	VolumeUtils.update_label_text(
 			self,
 			display_label,
-			label_display,
 			update_label_in_editor,
 			round_display_volume or rounded,
 	)
 
 
 ## Refreshes the grabber/grabber_highlight theme icon overrides based on the current muted state.
-func _update_grabber_icon() -> void:
+func update_grabber_icon() -> void:
 	VolumeUtils.update_grabber_icon(
 			self,
 			bus_name,
@@ -205,11 +178,6 @@ func _update_grabber_icon() -> void:
 			_saved_grabber_icon_override,
 			_saved_grabber_highlight_icon_override,
 	)
-
-
-## Saves the volume on drag end if [member save_volume] is [code]true[/code].
-func _on_drag_ended(value_changed: bool) -> void:
-	VolumeUtils.handle_drag_ended(self, bus_name, save_volume, value_changed)
 
 
 ## Hides irrelevant Inspector properties and toggles read-only states dynamically.
@@ -223,7 +191,7 @@ func _get_property_list() -> Array[Dictionary]:
 
 
 ## Returns the tooltip text to display when hovering the slider.
-func _get_tooltip(at_position: Vector2) -> String:
+func _get_tooltip(_at_position: Vector2) -> String:
 	return VolumeUtils.get_tooltip_text(
 			self,
 			bus_name,
@@ -237,13 +205,13 @@ func _get_tooltip(at_position: Vector2) -> String:
 
 ## Sets [member bus_name] after validating it exists, then resynchronizes the slider.
 func set_bus_name(new_bus_name: String) -> void:
-	bus_name = VolumeUtils.set_slider_bus_name(self, new_bus_name, save_volume)
+	bus_name = VolumeUtils.set_slider_bus_name(self, new_bus_name)
 
 
 ## Sets [member display_label] and immediately refreshes its displayed text.
 func set_display_label(new_label: Label) -> void:
 	display_label = new_label
-	VolumeUtils.set_slider_display_label(self, new_label)
+	VolumeUtils.set_slider_display_label(self,display_label)
 
 
 ## Hides [member round_display_volume] dynamically and caches user-set grabber icon overrides.

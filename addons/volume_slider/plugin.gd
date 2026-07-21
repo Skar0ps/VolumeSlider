@@ -16,22 +16,3 @@ func _exit_tree():
 	remove_custom_type("HVolumeSlider")
 	remove_custom_type("VVolumeSlider")
 	remove_inspector_plugin(inspector_plugin)
-
-func _enable_plugin():
-	if not ProjectSettings.has_setting(VolumeUtils.SETTING_PATH):
-		ProjectSettings.set_setting(VolumeUtils.SETTING_PATH, VolumeUtils.DEFAULT_PATH)
-		ProjectSettings.set_initial_value(VolumeUtils.SETTING_PATH, VolumeUtils.DEFAULT_PATH)
-		ProjectSettings.add_property_info({
-			"name": VolumeUtils.SETTING_PATH,
-			"type": TYPE_STRING,
-			"hint": PROPERTY_HINT_GLOBAL_FILE,
-			"hint_string": "*.cfg"
-		})
-		ProjectSettings.save()
-	
-	if not ProjectSettings.has_setting("autoload/VolumeSliderBootstrap"):
-		add_autoload_singleton("VolumeSliderBootstrap", "res://addons/volume_slider/scripts/volume_slider_bootstrap.gd")
-
-func _disable_plugin():
-	if ProjectSettings.has_setting("autoload/VolumeSliderBootstrap"):
-		remove_autoload_singleton("VolumeSliderBootstrap")
