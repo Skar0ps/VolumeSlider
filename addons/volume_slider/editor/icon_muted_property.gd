@@ -8,9 +8,13 @@ extends EditorProperty
 ## properties without switching the main Inspector view. Clicking the resource again
 ## hides the sub-inspector.[br]
 ##
-## @experimental: This relies on internal Inspector behavior (manually instancing
-## [EditorInspector] as a sub-inspector) that is not officially documented as a
-## public workflow and may change between Godot versions.
+## @experimental: This relies on internal Inspector behavior**
+##
+##[br][br] ** Manually instancing [EditorInspector] as a sub-inspector is not officially 
+## documented as a public workflow and may change between Godot versions (made with 4.7.1).
+
+# side note, you can access this editor script documentation page in "Search Help"
+# with the following query : addons/volume_slider/editor/icon_muted_property.gd
 
 ## Resource picker used to assign the [Texture2D] value of the edited property.
 var picker := EditorResourcePicker.new()
@@ -94,16 +98,17 @@ func _close_sub_inspector() -> void:
 	deselect()
 
 
-# Refreshes [member picker] to reflect the edited object's current value.[br]
-# If the property is unset ([code]null[/code]) and the edited object exposes a
-# [method Object.get_resolved_grabber_muted_icon] method, the picker falls back
-# to displaying that resolved icon instead of leaving the property empty.
+# Refreshes picker to reflect the edited object's current value.
+# If the property is unset (null) and the edited object has a
+# Object.get_resolved_grabber_muted_icon method, the picker falls back
+# to displaying that icon instead of leaving the property empty to mimick
+# the real theme overrides
 func _update_property() -> void:
 	var object: Object = get_edited_object()
 	var prop_name: String = get_edited_property()
 	var raw_value: Texture2D = object[prop_name]
 	
-	# deferred to prevent the user from checking it with a null raw value
+	# deferred to prevent the user from checking it manually
 	set_checked.call_deferred(raw_value != null)
 	
 	_updating = true

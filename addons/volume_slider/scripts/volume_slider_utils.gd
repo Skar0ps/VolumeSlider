@@ -80,25 +80,25 @@ static func is_muted(slider: Range, bus_name: String) -> bool:
 
 ## Applies [param new_value] to the bus [param bus_name]: mutes it at [member Range.min_value],
 ## converts it to dB, and returns the resulting [param volume_db].
-static func compute_bus_volume_db(bus_name: String, slider: Range, new_value: float) -> float:
+static func compute_bus_volume_db(bus_name: String, slider: Range, new_value: float, modify_volume_in_editor: bool) -> float:
 	var bus_index: int = AudioServer.get_bus_index(bus_name)
 	if bus_index == -1:
 		push_error("No audio bus with name : " + bus_name)
 		return NAN
-
+	
 	var was_muted: bool = AudioServer.is_bus_mute(bus_index)
 	var should_mute: bool = new_value <= slider.min_value
-
+	
 	if not was_muted and should_mute:
 		slider.muted.emit()
-		prints("MUTED EMIT FOR",bus_name)
 	if was_muted and not should_mute:
 		slider.unmuted.emit()
-		prints("UNMUTED EMIT FOR",bus_name)
-
-	AudioServer.set_bus_mute(bus_index, should_mute)
+	
 	var volume_db: float = value_to_db(new_value)
-	AudioServer.set_bus_volume_db(bus_index, volume_db)
+	
+	if not Engine.is_editor_hint() or modify_volume_in_editor:
+		AudioServer.set_bus_mute(bus_index, should_mute)
+		AudioServer.set_bus_volume_db(bus_index, volume_db)
 	return volume_db
 
 
@@ -121,10 +121,11 @@ static func sync_slider_with_bus(
 	var target_value: float = db_to_value(volume_db)
 	slider.set_value_no_signal(target_value)
 
-	var check_slider_value: Callable = func():
-		if not is_equal_approx(target_value, slider.value):
-			push_error("Slider value was not synced with bus volume for %s." % slider.get_path())
-	check_slider_value.call_deferred()
+	is_slider_synced_with_bus.call_deferred(slider, bus_name)
+
+## Returns [code]true[/code] if the slider is currently synced with the bus
+static func is_slider_synced_with_bus(slider: Range, bus_name: String) -> bool:
+	return slider.value == db_to_value(AudioServer.get_bus_volume_db(AudioServer.get_bus_index(bus_name)))
 
 
 ## Builds the tooltip text shown when hovering the slider, combining the bus
@@ -157,6 +158,10 @@ static func get_tooltip_text(
 static func get_resolved_grabber_muted_icon(slider: Slider, override_icon: Texture2D) -> Texture2D:
 	if override_icon != null:
 		return override_icon
+	
+	# Here i use get_script().get_global_name() instead of get_class() because custom classes are not
+	# accessible through get_class(), so VVolumeSlider would return VSlider with get_class,
+	# and get_script().get_global_name() would return VVolumeSlider.
 	var custom_type: StringName = slider.get_script().get_global_name()
 	if slider.has_theme_icon(&"grabber_muted", custom_type):
 		return slider.get_theme_icon(&"grabber_muted", custom_type)
@@ -348,7 +353,7 @@ static func _create_mute_button_deferred(slider: Slider, bus_name: String, bus_i
 	var needs_new_container: bool = _needs_new_container(slider, parent)
 	var slider_snapshot: Dictionary = _snapshot_control_rect(slider)
 	
-	var container: Control = parent
+	var container: Node = parent
 	if needs_new_container:
 		container = VBoxContainer.new() if slider is VVolumeSlider else HBoxContainer.new()
 		container.name = bus_name.capitalize() + "VolumeContainer"
@@ -623,7 +628,7 @@ static func setup_slider_ready(slider: Slider, bus_name: String) -> void:
 		if not AudioServer.bus_renamed.is_connected(slider.notify_property_list_changed):
 			AudioServer.bus_renamed.connect(slider.notify_property_list_changed)
 	sync_slider_with_bus(slider, bus_name)
-	
+	slider.min_value = 0.0
 	if slider.accessibility_name.is_empty():
 		slider.accessibility_name = "%s Volume Slider" % bus_name.capitalize()
 	if slider.accessibility_description.is_empty():
@@ -674,12 +679,10 @@ static func on_mute_button_toggled(slider: Slider, bus_name: String, is_muted_no
 
 ## Handles the slider's [code]value_changed[/code] logic: label/icon refresh,
 ## bus volume update, and [signal volume_changed] emission.
-static func handle_value_changed(slider: Slider, bus_name: String, new_value: float) -> void:
+static func handle_value_changed(slider: Slider, bus_name: String, new_value: float, modify_volume_in_editor: bool = false) -> void:
 	slider.update_label_text()
 	slider.update_grabber_icon.call_deferred()
-	if Engine.is_editor_hint():
-		return
-	var volume_db: float = compute_bus_volume_db(bus_name, slider, new_value)
+	var volume_db: float = compute_bus_volume_db(bus_name, slider, new_value, modify_volume_in_editor)
 	if is_nan(volume_db):
 		return
 	if is_instance_valid(slider.mute_button):
@@ -697,6 +700,8 @@ static func validate_slider_property(slider: Slider, property: Dictionary) -> vo
 		# Hide useless range properties for a volume slider
 		"page", "exp_edit", "allow_lesser", "allow_greater":
 			property.usage = PROPERTY_USAGE_NO_EDITOR
+		"min_value":
+			property.usage = PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_READ_ONLY
 		# Make round_display_volume read only when round is true
 		"round_display_volume":
 			if slider.rounded:
@@ -730,6 +735,12 @@ static func build_slider_property_list() -> Array[Dictionary]:
 ## [member grabber_muted_highlight_icon] don't discard them when unmuted.
 static func handle_set(slider: Slider, property: StringName, value: Variant) -> void:
 	match property:
+		# force max_value to be at least 100 (base unity gain)
+		"max_value":
+			slider.set_max(maxf(value, 100.0))
+		# force min_value to 0
+		"min_value":
+			slider.set_min(0.0)
 		# Hides dynamically round_display_volume based on the state of rounded
 		"rounded":
 			slider.notify_property_list_changed()
@@ -747,9 +758,10 @@ static func handle_set(slider: Slider, property: StringName, value: Variant) -> 
 ## Returns the resulting bus name to assign (either the new one, or the unchanged current one on failure).
 static func set_slider_bus_name(slider: Slider, new_bus_name: String) -> String:
 	if is_valid_bus(new_bus_name):
-		sync_slider_with_bus(slider, new_bus_name)
+		if slider.is_inside_tree():
+			sync_slider_with_bus(slider, new_bus_name)
 		return new_bus_name
-	push_error('No bus found with name : "', new_bus_name, '"')
+	push_error('No bus found with name : "' + new_bus_name + '", bus_name not changed.')
 	return slider.bus_name
 
 

@@ -8,10 +8,6 @@
 
 config_version=5
 
-[addons]
-
-volume_slider/config_path="user://volume_slider.cfg"
-
 [animation]
 
 compatibility/default_parent_skeleton_in_mesh_instance_3d=true
@@ -29,4 +25,4 @@ buses/default_bus_layout="uid://dnr4n5gi8nmwr"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/GDQuest_GDScript_formatter/plugin.cfg", "res://addons/volume_slider/plugin.cfg")
+enabled=PackedStringArray("res://addons/volume_slider/plugin.cfg")

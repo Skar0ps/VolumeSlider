@@ -3,10 +3,8 @@
 [ext_resource type="Script" uid="uid://dug14s2hemd1i" path="res://addons/volume_slider/scripts/h_volume_slider.gd" id="1_6rln0"]
 [ext_resource type="Theme" uid="uid://cp4elnpdafa3s" path="res://addons/volume_slider/VolumeSliderTheme.tres" id="1_i17ug"]
 [ext_resource type="Script" uid="uid://dns35ic13fl62" path="res://addons/volume_slider/scripts/v_volume_slider.gd" id="1_r6x3m"]
-[ext_resource type="AudioStream" uid="uid://dobkf3d3apg33" path="res://addons/volume_slider/examples/hangtime.ogg" id="2_1a1sw"]
-[ext_resource type="Texture2D" uid="uid://1xhql0fm8vxy" path="res://addons/volume_slider/icons/slider_grabber_muted.svg" id="3_btifn"]
-[ext_resource type="Texture2D" uid="uid://cblyvgdp43qap" path="res://addons/volume_slider/icons/slider_grabber_muted_hl.svg" id="4_e1hcn"]
 [ext_resource type="AudioStream" uid="uid://btbfgo2j44y0" path="res://addons/volume_slider/examples/ambience_day.ogg" id="4_lwqib"]
+[ext_resource type="AudioStream" uid="uid://cowq5g321wv6d" path="res://addons/volume_slider/examples/house_in_a_forest_loop.ogg" id="4_o7ghw"]
 [ext_resource type="AudioStream" uid="uid://bnk4reeu04nsm" path="res://addons/volume_slider/examples/humam_mumble.ogg" id="7_btifn"]
 
 [sub_resource type="GDScript" id="GDScript_43jmk"]
@@ -36,6 +34,14 @@ Color(1, 0.37254903, 0.37254903, 1): Color(1, 0.47, 0.42, 1),
 Color(0.37254903, 1, 0.5921569, 1): Color(0.45, 0.95, 0.5, 1),
 Color(1, 0.8666667, 0.39607844, 1): Color(0.83, 0.78, 0.62, 1)
 }
+
+[sub_resource type="LabelSettings" id="LabelSettings_i17ug"]
+font_size = 32
+outline_size = 8
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 8
+shadow_color = Color(0, 0, 0, 1)
+shadow_offset = Vector2(0, 2)
 
 [sub_resource type="DPITexture" id="DPITexture_i17ug"]
 _source = "<svg xmlns=\"http://www.w3.org/2000/svg\" xml:space=\"preserve\" width=\"16\" height=\"16\" version=\"1.0\" viewBox=\"0 0 2.4 2.4\"><path fill=\"#e0e0e0\" d=\"M 1.2518555 0.15 A 0.1 0.1 0 0 0 1.1701172 0.17988281 L 0.6 0.75 L 0.31787109 0.75 C 0.22487119 0.75 0.15 0.81700008 0.15 0.9 L 0.15 1.5 C 0.15 1.5424221 0.16969512 1.5805593 0.20126953 1.6078125 L 1.35 0.45527344 L 1.35 0.25605469 A 0.106 0.106 0 0 0 1.2518555 0.15 z M 1.35 1.6438477 L 0.97236328 2.0223633 L 1.1701172 2.2201172 C 1.2361171 2.2871171 1.35 2.239996 1.35 2.1459961 L 1.35 1.6438477 z\"/><path fill=\"#e0e0e0\" d=\"M 2.1984375 0.79306641 L 2.0660156 0.92578125 C 2.1142629 1.1320246 2.0935608 1.3239034 2.0487305 1.4882812 C 1.9692536 1.7796963 1.8105469 1.9725586 1.8105469 1.9725586 A 0.0825 0.0825 0 0 0 1.8222656 2.0879883 A 0.0825 0.0825 0 0 0 1.9394531 2.0780273 C 1.9394531 2.0780273 2.1176607 1.8586814 2.2069336 1.5313477 C 2.2638362 1.3227069 2.2834498 1.0648044 2.1984375 0.79306641 z M 1.8539062 1.1384766 L 1.6790039 1.3136719 C 1.6747238 1.3346601 1.6697313 1.3550615 1.6640625 1.3749023 C 1.6131343 1.5531513 1.5117188 1.6719727 1.5117187 1.6719727 A 0.0825 0.0825 0 0 0 1.5213867 1.7871094 A 0.0825 0.0825 0 0 0 1.6368164 1.7791992 C 1.6368164 1.7791992 1.7606941 1.6355198 1.8222656 1.4200195 C 1.8460259 1.3368593 1.8597024 1.2410136 1.8539062 1.1384766 z\" color=\"#000\" paint-order=\"markers stroke fill\" style=\"-inkscape-stroke:none\"/><path fill=\"#fc7f7f\" d=\"M.08295 2.0529 2.0502.07965 2.31705.34725.34965 2.32035ZM-1.2804596 3.0939027 3.0879072-1.2877874Z\"/></svg>
@@ -76,6 +82,29 @@ Color(1, 0.37254903, 0.37254903, 1): Color(1, 0.47, 0.42, 1),
 Color(0.37254903, 1, 0.5921569, 1): Color(0.45, 0.95, 0.5, 1),
 Color(1, 0.8666667, 0.39607844, 1): Color(0.83, 0.78, 0.62, 1)
 }
+
+[sub_resource type="LabelSettings" id="LabelSettings_o7ghw"]
+font_size = 64
+outline_size = 8
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 8
+shadow_color = Color(0, 0, 0, 1)
+shadow_offset = Vector2(0, 2)
+
+[sub_resource type="GDScript" id="GDScript_o7ghw"]
+script/source = "extends RichTextLabel
+
+
+func _ready() -> void:
+	meta_clicked.connect(_richtextlabel_on_meta_clicked)
+
+# This assumes RichTextLabel's `meta_clicked` signal was connected to
+# the function below using the signal connection dialog.
+func _richtextlabel_on_meta_clicked(meta):
+	# `meta` is not guaranteed to be a String, so convert it to a String
+	# to avoid script errors at runtime.
+	OS.shell_open(str(meta))
+"
 
 [sub_resource type="DPITexture" id="DPITexture_l3ngd"]
 _source = "<svg xmlns=\"http://www.w3.org/2000/svg\" xml:space=\"preserve\" width=\"16\" height=\"16\" version=\"1.0\" viewBox=\"0 0 2.4 2.4\"><path fill=\"#e0e0e0\" d=\"M 1.2518555 0.15 A 0.1 0.1 0 0 0 1.1701172 0.17988281 L 0.6 0.75 L 0.31787109 0.75 C 0.22487119 0.75 0.15 0.81700008 0.15 0.9 L 0.15 1.5 C 0.15 1.5424221 0.16969512 1.5805593 0.20126953 1.6078125 L 1.35 0.45527344 L 1.35 0.25605469 A 0.106 0.106 0 0 0 1.2518555 0.15 z M 1.35 1.6438477 L 0.97236328 2.0223633 L 1.1701172 2.2201172 C 1.2361171 2.2871171 1.35 2.239996 1.35 2.1459961 L 1.35 1.6438477 z\"/><path fill=\"#e0e0e0\" d=\"M 2.1984375 0.79306641 L 2.0660156 0.92578125 C 2.1142629 1.1320246 2.0935608 1.3239034 2.0487305 1.4882812 C 1.9692536 1.7796963 1.8105469 1.9725586 1.8105469 1.9725586 A 0.0825 0.0825 0 0 0 1.8222656 2.0879883 A 0.0825 0.0825 0 0 0 1.9394531 2.0780273 C 1.9394531 2.0780273 2.1176607 1.8586814 2.2069336 1.5313477 C 2.2638362 1.3227069 2.2834498 1.0648044 2.1984375 0.79306641 z M 1.8539062 1.1384766 L 1.6790039 1.3136719 C 1.6747238 1.3346601 1.6697313 1.3550615 1.6640625 1.3749023 C 1.6131343 1.5531513 1.5117188 1.6719727 1.5117187 1.6719727 A 0.0825 0.0825 0 0 0 1.5213867 1.7871094 A 0.0825 0.0825 0 0 0 1.6368164 1.7791992 C 1.6368164 1.7791992 1.7606941 1.6355198 1.8222656 1.4200195 C 1.8460259 1.3368593 1.8597024 1.2410136 1.8539062 1.1384766 z\" color=\"#000\" paint-order=\"markers stroke fill\" style=\"-inkscape-stroke:none\"/><path fill=\"#fc7f7f\" d=\"M.08295 2.0529 2.0502.07965 2.31705.34725.34965 2.32035ZM-1.2804596 3.0939027 3.0879072-1.2877874Z\"/></svg>
@@ -135,7 +164,7 @@ custom_minimum_size = Vector2(48, 32)
 layout_mode = 2
 size_flags_stretch_ratio = 0.0
 theme_override_font_sizes/font_size = 24
-text = "41"
+text = "10"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -145,20 +174,15 @@ size_flags_horizontal = 4
 theme_override_icons/checked = SubResource("DPITexture_o7ghw")
 theme_override_icons/unchecked = SubResource("DPITexture_nkkuw")
 
-[node name="VVolumeSlider" type="VSlider" parent="HBox/HBox/Master/Master" unique_id=1454866221 node_paths=PackedStringArray("display_label", "mute_button")]
+[node name="VVolumeSlider" type="VSlider" parent="HBox/HBox/Master/Master" unique_id=1454866221]
 layout_mode = 2
 size_flags_horizontal = 1
 size_flags_vertical = 3
 accessibility_name = "Master Volume Slider"
 accessibility_description = "Adjusts the Master audio bus volume, currently 100 percent"
-value = 41.0
+value = 10.0
 script = ExtResource("1_r6x3m")
-label_display = true
-display_label = NodePath("../VolumeLabel")
-_label_create = Callable()
 update_label_in_editor = true
-mute_button = NodePath("../MasterMuteButton")
-_mute_button_create = Callable()
 bus_name = "Master"
 
 [node name="Master" type="Label" parent="HBox/HBox/Master/Master" unique_id=684667671]
@@ -168,6 +192,7 @@ size_flags_vertical = 1
 size_flags_stretch_ratio = 0.0
 theme_override_font_sizes/font_size = 32
 text = "Master"
+label_settings = SubResource("LabelSettings_i17ug")
 horizontal_alignment = 2
 vertical_alignment = 1
 
@@ -200,7 +225,7 @@ size_flags_horizontal = 4
 theme_override_icons/checked = SubResource("DPITexture_i17ug")
 theme_override_icons/unchecked = SubResource("DPITexture_btifn")
 
-[node name="VVolumeSlider" type="VSlider" parent="HBox/HBox/VBox/HBox/SFX" unique_id=2084770138 node_paths=PackedStringArray("display_label", "mute_button")]
+[node name="VVolumeSlider" type="VSlider" parent="HBox/HBox/VBox/HBox/SFX" unique_id=2084770138]
 layout_mode = 2
 size_flags_horizontal = 1
 size_flags_vertical = 3
@@ -208,12 +233,7 @@ accessibility_name = "Sfx Volume Slider"
 accessibility_description = "Adjusts the SFX audio bus volume, currently 100 percent"
 value = 100.0
 script = ExtResource("1_r6x3m")
-label_display = true
-display_label = NodePath("../VolumeLabel")
-_label_create = Callable()
 update_label_in_editor = true
-mute_button = NodePath("../SfxMuteButton")
-_mute_button_create = Callable()
 bus_name = "SFX"
 
 [node name="SFX" type="Label" parent="HBox/HBox/VBox/HBox/SFX" unique_id=2106678501]
@@ -223,6 +243,7 @@ size_flags_vertical = 1
 size_flags_stretch_ratio = 0.0
 theme_override_font_sizes/font_size = 32
 text = "SFX"
+label_settings = SubResource("LabelSettings_i17ug")
 horizontal_alignment = 2
 vertical_alignment = 1
 
@@ -255,7 +276,7 @@ size_flags_horizontal = 4
 theme_override_icons/checked = SubResource("DPITexture_o7ghw")
 theme_override_icons/unchecked = SubResource("DPITexture_nkkuw")
 
-[node name="VVolumeSlider" type="VSlider" parent="HBox/HBox/VBox/HBox/VBox/HBox/Music" unique_id=82983370 node_paths=PackedStringArray("display_label", "mute_button")]
+[node name="VVolumeSlider" type="VSlider" parent="HBox/HBox/VBox/HBox/VBox/HBox/Music" unique_id=82983370]
 layout_mode = 2
 size_flags_horizontal = 1
 size_flags_vertical = 3
@@ -263,13 +284,8 @@ accessibility_name = "Music Volume Slider"
 accessibility_description = "Adjusts the Music audio bus volume, currently 100 percent"
 value = 100.0
 script = ExtResource("1_r6x3m")
-label_display = true
-display_label = NodePath("../VolumeLabel")
-_label_create = Callable()
 update_label_in_editor = true
 tooltip_display = true
-mute_button = NodePath("../MusicMuteButton")
-_mute_button_create = Callable()
 bus_name = "Music"
 
 [node name="Music" type="Label" parent="HBox/HBox/VBox/HBox/VBox/HBox/Music" unique_id=378128618]
@@ -279,6 +295,7 @@ size_flags_vertical = 1
 size_flags_stretch_ratio = 0.0
 theme_override_font_sizes/font_size = 32
 text = "Music"
+label_settings = SubResource("LabelSettings_i17ug")
 horizontal_alignment = 2
 vertical_alignment = 1
 
@@ -301,7 +318,7 @@ custom_minimum_size = Vector2(48, 32)
 layout_mode = 2
 size_flags_stretch_ratio = 0.0
 theme_override_font_sizes/font_size = 24
-text = "0"
+text = "100"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -311,22 +328,15 @@ size_flags_horizontal = 4
 theme_override_icons/checked = SubResource("DPITexture_xpmuu")
 theme_override_icons/unchecked = SubResource("DPITexture_qkm8y")
 
-[node name="VVolumeSlider" type="VSlider" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/Ambience" unique_id=1153112369 node_paths=PackedStringArray("display_label", "mute_button")]
+[node name="VVolumeSlider" type="VSlider" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/Ambience" unique_id=1153112369]
 layout_mode = 2
 size_flags_horizontal = 1
 size_flags_vertical = 3
 accessibility_name = "Ambience Volume Slider"
 accessibility_description = "Adjusts the Ambience audio bus volume, currently 23 percent"
-theme_override_icons/grabber = ExtResource("3_btifn")
-theme_override_icons/grabber_highlight = ExtResource("4_e1hcn")
+value = 100.0
 script = ExtResource("1_r6x3m")
-label_display = true
-display_label = NodePath("../VolumeLabel")
-_label_create = Callable()
 update_label_in_editor = true
-save_volume = true
-mute_button = NodePath("../AmbienceMuteButton")
-_mute_button_create = Callable()
 bus_name = "Ambience"
 
 [node name="Ambience" type="Label" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/Ambience" unique_id=1278893829]
@@ -336,6 +346,7 @@ size_flags_vertical = 1
 size_flags_stretch_ratio = 0.0
 theme_override_font_sizes/font_size = 32
 text = "Ambience"
+label_settings = SubResource("LabelSettings_i17ug")
 horizontal_alignment = 2
 vertical_alignment = 1
 
@@ -343,15 +354,36 @@ vertical_alignment = 1
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/VBox" unique_id=1238721332]
+[node name="HBoxContainer" type="HBoxContainer" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/VBox" unique_id=1657859388]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_font_sizes/font_size = 64
+theme_override_constants/separation = 32
+
+[node name="Label" type="Label" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/VBox/HBoxContainer" unique_id=1238721332]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 text = "Volume 
 sliders
 example"
-horizontal_alignment = 1
+label_settings = SubResource("LabelSettings_o7ghw")
+horizontal_alignment = 2
 vertical_alignment = 1
+
+[node name="RichTextLabel" type="RichTextLabel" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/VBox/HBoxContainer" unique_id=1012332413]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 6
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_outline_size = 6
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 2
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/normal_font_size = 24
+bbcode_enabled = true
+text = "Music : [url=https://opengameart.org/content/loop-house-in-a-forest]House In A Forest by HorrorPen[/url]"
+fit_content = true
+script = SubResource("GDScript_o7ghw")
 
 [node name="AmbienceSlider" type="HBoxContainer" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/VBox" unique_id=2111800280]
 custom_minimum_size = Vector2(0, 48)
@@ -360,23 +392,17 @@ size_flags_horizontal = 3
 size_flags_vertical = 8
 theme_override_constants/separation = 0
 
-[node name="VolumeSlider" type="HSlider" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/VBox/AmbienceSlider" unique_id=1563424272 node_paths=PackedStringArray("display_label", "mute_button")]
+[node name="VolumeSlider" type="HSlider" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/VBox/AmbienceSlider" unique_id=1563424272]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
 accessibility_name = "Ambience Volume Slider"
 accessibility_description = "Adjusts the Ambience audio bus volume, currently 23 percent"
-theme_override_icons/grabber = ExtResource("3_btifn")
-theme_override_icons/grabber_highlight = ExtResource("4_e1hcn")
-rounded = true
+step = 0.1
+value = 100.0
 script = ExtResource("1_6rln0")
-label_display = true
-display_label = NodePath("../VolumeLabel")
 update_label_in_editor = true
-save_volume = true
-save_on_drag_end = false
-mute_button = NodePath("../AmbienceMuteButton")
-_mute_button_create = Callable()
+tooltip_display = true
 bus_name = "Ambience"
 
 [node name="AmbienceMuteButton" type="CheckBox" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/HBox/VBox/AmbienceSlider" unique_id=1531774115]
@@ -392,7 +418,7 @@ size_flags_horizontal = 2
 size_flags_vertical = 1
 size_flags_stretch_ratio = 0.0
 theme_override_font_sizes/font_size = 24
-text = "0"
+text = "100"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -403,7 +429,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 0
 theme_override_constants/separation = 0
 
-[node name="VolumeSlider" type="HSlider" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/Music" unique_id=2015777265 node_paths=PackedStringArray("display_label", "mute_button")]
+[node name="VolumeSlider" type="HSlider" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/Music" unique_id=2015777265]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
@@ -411,11 +437,7 @@ accessibility_name = "Music Volume Slider"
 accessibility_description = "Adjusts the Music audio bus volume, currently 100 percent"
 value = 100.0
 script = ExtResource("1_6rln0")
-label_display = true
-display_label = NodePath("../VolumeLabel")
 update_label_in_editor = true
-mute_button = NodePath("../MusicMuteButton")
-_mute_button_create = Callable()
 bus_name = "Music"
 
 [node name="MusicMuteButton" type="CheckBox" parent="HBox/HBox/VBox/HBox/VBox/HBox/VBox/Music" unique_id=795056246]
@@ -442,7 +464,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 0
 theme_override_constants/separation = 0
 
-[node name="VolumeSlider" type="HSlider" parent="HBox/HBox/VBox/HBox/VBox/HSFX" unique_id=2099561287 node_paths=PackedStringArray("display_label", "mute_button")]
+[node name="VolumeSlider" type="HSlider" parent="HBox/HBox/VBox/HBox/VBox/HSFX" unique_id=2099561287]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
@@ -450,11 +472,7 @@ accessibility_name = "Sfx Volume Slider"
 accessibility_description = "Adjusts the SFX audio bus volume, currently 100 percent"
 value = 100.0
 script = ExtResource("1_6rln0")
-label_display = true
-display_label = NodePath("../VolumeLabel")
 update_label_in_editor = true
-mute_button = NodePath("../SfxMuteButton")
-_mute_button_create = Callable()
 bus_name = "SFX"
 
 [node name="SfxMuteButton" type="CheckBox" parent="HBox/HBox/VBox/HBox/VBox/HSFX" unique_id=1901779385]
@@ -481,19 +499,15 @@ size_flags_horizontal = 3
 size_flags_vertical = 0
 theme_override_constants/separation = 0
 
-[node name="VolumeSlider" type="HSlider" parent="HBox/HBox/VBox/Master" unique_id=323825648 node_paths=PackedStringArray("display_label", "mute_button")]
+[node name="VolumeSlider" type="HSlider" parent="HBox/HBox/VBox/Master" unique_id=323825648]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
 accessibility_name = "Master Volume Slider"
 accessibility_description = "Adjusts the Master audio bus volume, currently 100 percent"
-value = 41.0
+value = 10.0
 script = ExtResource("1_6rln0")
-label_display = true
-display_label = NodePath("../VolumeLabel")
 update_label_in_editor = true
-mute_button = NodePath("../MasterMuteButton")
-_mute_button_create = Callable()
 bus_name = "Master"
 
 [node name="MasterMuteButton" type="CheckBox" parent="HBox/HBox/VBox/Master" unique_id=648506239]
@@ -509,12 +523,12 @@ size_flags_horizontal = 2
 size_flags_vertical = 1
 size_flags_stretch_ratio = 0.0
 theme_override_font_sizes/font_size = 24
-text = "41"
+text = "10"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Music" type="AudioStreamPlayer" parent="." unique_id=378610413]
-stream = ExtResource("2_1a1sw")
+stream = ExtResource("4_o7ghw")
 autoplay = true
 bus = &"Music"
 

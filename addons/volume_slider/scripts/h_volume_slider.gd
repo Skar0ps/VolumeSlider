@@ -86,6 +86,14 @@ var bus_name: String = "Master":
 	get ():
 		return _get_tooltip(Vector2.ZERO)
 
+@export_group("Editor")
+
+## If [code]true[/code], allows the slider to affect the bus volume in the editor when changed.[br][br]
+## [b]Note :[/b] It is recommended to not keep this to [code]true[/code] and only turn it on while debugging the VolumeSlider,
+## as the bus volume will not be reset when starting the game.
+@export var modify_bus_volume_in_editor: bool = false
+
+
 ## Icon used for the grabber when the slider's bus is muted.
 ## Returns null if unset, use [method get_resolved_grabber_muted_icon] for display purposes.
 @export_custom(PROPERTY_HINT_RESOURCE_TYPE, "Texture2D", PROPERTY_USAGE_STORAGE) var grabber_muted_icon: Texture2D:
@@ -155,7 +163,7 @@ func get_resolved_grabber_muted_highlight_icon() -> Texture2D:
 
 ## Called when the slider's value is changed by the user. Delegates to [method VolumeUtils.handle_value_changed].
 func _value_changed(new_value: float) -> void:
-	VolumeUtils.handle_value_changed(self, bus_name, new_value)
+	VolumeUtils.handle_value_changed(self, bus_name, new_value, modify_bus_volume_in_editor)
 
 
 ## Updates the [member display_label] text if the conditions are met
@@ -211,7 +219,7 @@ func set_bus_name(new_bus_name: String) -> void:
 ## Sets [member display_label] and immediately refreshes its displayed text.
 func set_display_label(new_label: Label) -> void:
 	display_label = new_label
-	VolumeUtils.set_slider_display_label(self,display_label)
+	VolumeUtils.set_slider_display_label(self, display_label)
 
 
 ## Hides [member round_display_volume] dynamically and caches user-set grabber icon overrides.
