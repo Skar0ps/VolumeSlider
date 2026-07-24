@@ -15,19 +15,25 @@ A simple and ready-to-use volume slider plugin for Godot 4. It provides `HVolume
   - ![horizontal volume slider icon](addons/volume_slider/icons/HVolumeSlider.svg) `HVolumeSlider`
   - ![vertical volume slider icon](addons/volume_slider/icons/VVolumeSlider.svg) `VVolumeSlider`
 - **Dynamic Bus Selection**: Select the audio bus from a dropdown list in the Inspector, automatically populated with your project's actual audio buses and kept in sync if buses are renamed or the layout changes.
+
   ![Inspector screenshot with the bus_name property clicked and the dropdown menu shown with all the available audio buses](docs/dynamic_bus_enum.jpg)
 - **Automatic dB Conversion**: Converts the slider's linear value (0-100 by default) to the logarithmic dB scale used by Godot's `AudioServer`. A value of 100 always corresponds to 0 dB (unity gain, no change), and a value of 0 corresponds to silence.
 
   ![Inspector screenshot with the min_value, max_value, and value properties shown with a decibel equivalent as a suffix beside them. The user is manipulating the values to show the dB suffix changing dynamically to show the actual dB value.](docs/dynamic_db_suffix.webp)
 - **Optional Gain Boost**: `min_value` is locked to 0 (always corresponding to silence) and always shown read-only with its dB suffix, while `max_value` can optionally be raised up to 200 to allow boosting the bus volume above unity gain for players who want extra headroom.
 - **Auto-Mute**: Automatically mutes the bus when the volume is set to its minimum value, with dedicated `muted`/`unmuted` signals and custom grabber icon overrides for the muted state.
+
   ![Animation of a scene with a horizontal volume slider going from the maximum value to the minimum value. When the slider is at the minimum value, the slider is shown muted by having the grabber icon show a red cross over it.](docs/dynamic_mute.webp)
 - **One-Click Mute Button**: Generate a linked `CheckBox` mute button directly from the Inspector. It's automatically wrapped in a matching `VBoxContainer`/`HBoxContainer` when needed, preserves the original layout (anchors, offsets, size flags), and is fully undo/redo-friendly in the editor.
+
   ![Video of the editor shown with a volume slider selected and the user clicking on the tool button "Create a mute button" and a linked `CheckBox` is generated in the tree with the volume slider reparented to an `HBoxContainer` automatically with the mute button being the first child and the volume slider being the second.](docs/dynamic_mute_button_creation.webp)
 - **Label Display**: Generate or bind a `Label` to show the live volume percentage, with optional rounding and editor preview. Like the mute button, it's also automatically wrapped in a matching `VBoxContainer`/`HBoxContainer` when needed, preserves the original layout (anchors, offsets, size flags), and is fully undo/redo-friendly in the editor.
+
   ![Video of the editor shown with a volume slider selected and the user clicking on the tool button "Create a volume label" and a linked `Label` is generated in the tree with the volume slider reparented to an `HBoxContainer` automatically with the volume slider being the first child and the label being the second.](docs/dynamic_display_label_creation.webp)
 - **Dynamic Tooltip**: Built-in tooltip with configurable bus name/decibel display, plus auto-filled screen-reader accessibility name and description.
+
   ![Inspector video with the tooltip enabled and the user changing the value of the volume slider, showcasing the tooltip preview in the inspector updating based on the value with the bus name, percentage, and decibel value in parenthesis.](docs/dynamic_tooltip_preview.webp)
+  
   ![Video of a scene with a horizontal volume slider being hovered while muted, with a tooltip appearing with the bus name, percentage, and decibel value in parenthesis. The user slides the slider to another value and waits to show the updated tooltip, repeating this operation two times before setting the slider value to its minimum value.](docs/dynamic_tooltip_scene_example.webp)
 - **Volume Signals**: Emits `volume_changed(volume_db)` whenever the volume changes, `muted` when the slider triggers a bus to be muted (reaching the minimum value), and `unmuted` when the slider triggers a bus to be unmuted (sliding the slider to any non-minimum value).
 
