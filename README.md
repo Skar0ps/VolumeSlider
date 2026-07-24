@@ -36,12 +36,19 @@ A simple and ready-to-use volume slider plugin for Godot 4. It provides `HVolume
   
   ![Video of a scene with a horizontal volume slider being hovered while muted, with a tooltip appearing with the bus name, percentage, and decibel value in parenthesis. The user slides the slider to another value and waits to show the updated tooltip, repeating this operation two times before setting the slider value to its minimum value.](docs/dynamic_tooltip_scene_example.webp)
 - **Volume Signals**: Emits `volume_changed(volume_db)` whenever the volume changes, `muted` when the slider triggers a bus to be muted (reaching the minimum value), and `unmuted` when the slider triggers a bus to be unmuted (sliding the slider to any non-minimum value).
+- **Gain boost**: raise `max_value` above 100 (up to 200) to allow the slider to go past unity gain and amplify the bus volume.
+- **Custom Theme Overrides**: The grabber icon can be customized by assigning a `Texture2D` to the `grabber_muted` and `grabber_unmuted` properties in the Theme Overrides or in your project's `Theme` resource. The plugin provides default icons for both the muted and unmuted states in the [Theme resource](addons/volume_slider/icons/volume_slider_theme.tres).
+![Editor screenshot showing the Theme Overrides inspector dropdown with the Icons subgroup having the grabber_muted and grabber_unmuted properties with default textures](docs/theme_overrides.jpg)
+  
+  You can also import the `grabber_muted` and `grabber_unmuted` icons theme properties for the classes `VVolumeSlider` and `HVolumeSlider` into your project's `Theme`.
+
+  ![Editor screenshot showing the popup window on the "Import Items" tab for the Theme resource with the grabber_muted and grabber_unmuted properties checked from the volume_slider_theme.tres file](docs/import_icons_from_theme.jpg)
 
 ## Installation
 
-### From Godot Asset Library (Recommended)
+### From Godot Asset Store (Recommended)
 
-1. Open the **AssetLib** tab in the Godot editor.
+1. Open the **Asset Store** tab in the Godot editor.
 2. Search for "Volume Slider".
 3. Click **Download**, and then **Install**.
 4. Enable the plugin in **Project -> Project Settings -> Plugins**.
@@ -58,12 +65,6 @@ A simple and ready-to-use volume slider plugin for Godot 4. It provides `HVolume
 2. Add one of these nodes to your scene.
 3. In the Inspector, find the **Bus Name** property and select the desired audio bus (e.g., "Master", "Music", "SFX").
 4. That's it! The slider now controls the volume of the selected bus at runtime.
-
-### Optional features
-
-- **Gain boost**: raise `max_value` above 100 (up to 200) to allow the slider to go past unity gain and amplify the bus volume.
-- **Tooltip Display**: enable the group to show a hover tooltip with the volume percentage, and optionally the bus name and/or decibel value.
-- **Editor Debugging**: enable `modify_bus_volume_in_editor` under the **Editor** group to preview volume changes live while working in the editor (remember to disable it afterward, as the bus volume won't reset automatically when running the game).
 
 ## License
 
