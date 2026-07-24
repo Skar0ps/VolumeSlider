@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-ffcb77.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 [![AssetLib](https://img.shields.io/badge/Asset%20Store-Volume%20Slider-6aff7c.svg?style=flat-square&logo=godotengine&logoColor=white)](https://store.godotengine.org/asset/skar0ps/volume-slider/)
 
-A simple and ready-to-use volume slider plugin for Godot 4. It provides `HVolumeSlider` and `VVolumeSlider` nodes that directly control the volume of any audio bus, with mute buttons, labels, tooltips, and accessibility support built in — no scripting required.
+A simple and ready-to-use volume slider plugin for Godot 4. It provides `HVolumeSlider` and `VVolumeSlider` nodes that directly control the volume of any audio bus, with mute buttons, display labels for the volume and dynamic tooltips.
 
 ![Volume Slider Preview](icon.png)
 
