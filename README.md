@@ -17,6 +17,7 @@ A simple and ready-to-use volume slider plugin for Godot 4. It provides `HVolume
 - **Dynamic Bus Selection**: Select the audio bus from a dropdown list in the Inspector, automatically populated with your project's actual audio buses and kept in sync if buses are renamed or the layout changes.
   ![Inspector screenshot with the bus_name property clicked and the dropdown menu shown with all the available audio buses](docs/dynamic_bus_enum.jpg)
 - **Automatic dB Conversion**: Converts the slider's linear value (0-100 by default) to the logarithmic dB scale used by Godot's `AudioServer`. A value of 100 always corresponds to 0 dB (unity gain, no change), and a value of 0 corresponds to silence.
+
   ![Inspector screenshot with the min_value, max_value, and value properties shown with a decibel equivalent as a suffix beside them. The user is manipulating the values to show the dB suffix changing dynamically to show the actual dB value.](docs/dynamic_db_suffix.webp)
 - **Optional Gain Boost**: `min_value` is locked to 0 (always corresponding to silence) and always shown read-only with its dB suffix, while `max_value` can optionally be raised up to 200 to allow boosting the bus volume above unity gain for players who want extra headroom.
 - **Auto-Mute**: Automatically mutes the bus when the volume is set to its minimum value, with dedicated `muted`/`unmuted` signals and custom grabber icon overrides for the muted state.
